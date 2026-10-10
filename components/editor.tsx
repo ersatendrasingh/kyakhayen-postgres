@@ -262,6 +262,19 @@ function Toolbar({
           <div className="grid grid-cols-3 gap-1">
             {[2, 3, 4].map((size) => <Button key={size} type="button" variant="ghost" className="h-9 rounded-lg text-xs text-foreground hover:bg-accent hover:text-accent-foreground" onMouseDown={(event) => event.preventDefault()} onClick={() => editor.chain().focus().insertTable({ rows: size, cols: size, withHeaderRow: true }).run()}>{size} × {size}</Button>)}
           </div>
+          <div className="mt-2 border-t pt-2">
+            <p className="px-2 pb-1 text-xs font-semibold text-foreground">Edit selected table</p>
+            <div className="grid grid-cols-2 gap-1">
+              {[
+                ["Add row above", () => editor.chain().focus().addRowBefore().run()],
+                ["Add row below", () => editor.chain().focus().addRowAfter().run()],
+                ["Add column before", () => editor.chain().focus().addColumnBefore().run()],
+                ["Add column after", () => editor.chain().focus().addColumnAfter().run()],
+                ["Toggle header row", () => editor.chain().focus().toggleHeaderRow().run()],
+                ["Delete table", () => editor.chain().focus().deleteTable().run()],
+              ].map(([label, action]) => <Button key={label as string} type="button" variant="ghost" className={cn("h-8 justify-start rounded-lg px-2 text-xs text-foreground hover:bg-accent hover:text-accent-foreground", label === "Delete table" && "text-destructive hover:text-destructive")} onMouseDown={(event) => event.preventDefault()} onClick={action as () => void}>{label as string}</Button>)}
+            </div>
+          </div>
         </PopoverContent>
       </Popover>
       <ToolButton label="Horizontal line" onClick={() => editor.chain().focus().setHorizontalRule().run()}><Minus className="size-4" /></ToolButton>

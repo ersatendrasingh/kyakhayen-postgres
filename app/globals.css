@@ -2000,6 +2000,12 @@ body {
   padding-left: 1rem;
 }
 
+.rich-content.tiptap h1,
+.rich-content.tiptap h2,
+.rich-content.tiptap h3,
+.rich-content.tiptap h4,
+.rich-content.tiptap h5,
+.rich-content.tiptap h6,
 .rich-content .tiptap h1,
 .rich-content .tiptap h2,
 .rich-content .tiptap h3,
@@ -2012,13 +2018,14 @@ body {
   margin: 1.15rem 0 0.65rem;
 }
 
-.rich-content .tiptap h1 { font-size: 2rem !important; }
-.rich-content .tiptap h2 { font-size: 1.65rem !important; }
-.rich-content .tiptap h3 { font-size: 1.4rem !important; }
-.rich-content .tiptap h4 { font-size: 1.2rem !important; }
-.rich-content .tiptap h5 { font-size: 1.05rem !important; }
-.rich-content .tiptap h6 { font-size: 0.95rem !important; letter-spacing: 0.02em; text-transform: uppercase; }
+.rich-content.tiptap h1, .rich-content .tiptap h1 { font-size: 2rem !important; }
+.rich-content.tiptap h2, .rich-content .tiptap h2 { font-size: 1.65rem !important; }
+.rich-content.tiptap h3, .rich-content .tiptap h3 { font-size: 1.4rem !important; }
+.rich-content.tiptap h4, .rich-content .tiptap h4 { font-size: 1.2rem !important; }
+.rich-content.tiptap h5, .rich-content .tiptap h5 { font-size: 1.05rem !important; }
+.rich-content.tiptap h6, .rich-content .tiptap h6 { font-size: 0.95rem !important; letter-spacing: 0.02em; text-transform: uppercase; }
 
+.rich-content.tiptap table,
 .rich-content .tiptap table {
   border-collapse: collapse;
   margin: 1rem 0;
@@ -2026,6 +2033,8 @@ body {
   width: 100%;
 }
 
+.rich-content.tiptap th,
+.rich-content.tiptap td,
 .rich-content .tiptap th,
 .rich-content .tiptap td {
   border: 1px solid var(--border);
@@ -2035,6 +2044,7 @@ body {
   vertical-align: top;
 }
 
+.rich-content.tiptap th,
 .rich-content .tiptap th {
   background: var(--muted);
   font-weight: 600;
