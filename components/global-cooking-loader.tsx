@@ -10,6 +10,7 @@ const navigationTargets = "a[href], button[type=submit], [data-global-loading]";
 export function GlobalCookingLoader() {
   const pathname = usePathname();
   const [isLoading, setIsLoading] = useState(false);
+  const [loadingMessage, setLoadingMessage] = useState("Bringing something delicious your way");
   const lastPathname = useRef(pathname);
 
   useEffect(() => {
@@ -37,6 +38,22 @@ export function GlobalCookingLoader() {
             new URL(link.href, window.location.href).search === window.location.search)
       ) {
         return;
+      }
+      if (link) {
+        const href = new URL(link.href, window.location.href);
+        const label = link.textContent?.replace(/\s+/g, " ").trim();
+        const path = href.pathname.toLowerCase();
+        if (path.includes("/recipes/veg")) {
+          setLoadingMessage("Showing you veg recipes");
+        } else if (path.includes("/recipes/")) {
+          setLoadingMessage(label ? `Showing you ${label.toLowerCase()}` : "Showing you recipes");
+        } else if (label) {
+          setLoadingMessage(`Opening ${label}`);
+        } else {
+          setLoadingMessage("Bringing something delicious your way");
+        }
+      } else {
+        setLoadingMessage("Working on your request");
       }
       setIsLoading(true);
     };
@@ -71,7 +88,7 @@ export function GlobalCookingLoader() {
           <span className="global-cooking-loader__food global-cooking-loader__food--three" />
         </div>
         <p className="global-cooking-loader__eyebrow">Kya Khayen?</p>
-        <p className="global-cooking-loader__message">Fresh ideas are almost ready<span className="global-cooking-loader__dots">...</span></p>
+        <p className="global-cooking-loader__message">{loadingMessage}</p>
         <div className="global-cooking-loader__progress" aria-hidden="true"><span /></div>
       </div>
     </div>
