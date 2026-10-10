@@ -71,7 +71,7 @@ export function GlobalCookingLoader() {
           <span className="global-cooking-loader__food global-cooking-loader__food--three" />
         </div>
         <p className="global-cooking-loader__eyebrow">Kya Khayen?</p>
-        <p className="global-cooking-loader__message">Setting the table for you<span className="global-cooking-loader__dots">...</span></p>
+        <p className="global-cooking-loader__message">Fresh ideas are almost ready<span className="global-cooking-loader__dots">...</span></p>
         <div className="global-cooking-loader__progress" aria-hidden="true"><span /></div>
       </div>
     </div>
