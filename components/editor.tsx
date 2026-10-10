@@ -235,7 +235,7 @@ function Toolbar({
         </DropdownMenuContent>
       </DropdownMenu>
       <span className="mx-1 h-6 w-px bg-border" />
-      <Popover><PopoverTrigger asChild><Button type="button" size="icon-sm" variant="ghost" title="Text styles" className="size-9 rounded-lg text-background/80 hover:bg-background/10 hover:text-background"><Bold className="size-4" /></Button></PopoverTrigger><PopoverContent align="start" sideOffset={8} className="w-auto rounded-xl border-border/50 bg-popover p-1.5 shadow-xl"><div className="flex gap-1"><ToolButton label="Bold" active={editor.isActive("bold")} onClick={() => editor.chain().focus().toggleBold().run()}><Bold className="size-4" /></ToolButton><ToolButton label="Italic" active={editor.isActive("italic")} onClick={() => editor.chain().focus().toggleItalic().run()}><Italic className="size-4" /></ToolButton><ToolButton label="Underline" active={editor.isActive("underline")} onClick={() => editor.chain().focus().toggleUnderline().run()}><UnderlineIcon className="size-4" /></ToolButton><ToolButton label="Strike through" active={editor.isActive("strike")} onClick={() => editor.chain().focus().toggleStrike().run()}><Strikethrough className="size-4" /></ToolButton></div></PopoverContent></Popover>
+      <Popover><PopoverTrigger asChild><Button type="button" size="icon-sm" variant="ghost" title="Text styles" className={cn("size-9 rounded-lg text-background/80 hover:bg-background/10 hover:text-background", (editor.isActive("bold") || editor.isActive("italic") || editor.isActive("underline") || editor.isActive("strike")) && "bg-primary text-primary-foreground hover:bg-primary hover:text-primary-foreground")}><Bold className="size-4" /></Button></PopoverTrigger><PopoverContent align="start" sideOffset={8} className="w-auto rounded-xl border-border/50 bg-white p-1.5 text-foreground shadow-xl"><div className="flex gap-1"><ToolButton label="Bold" active={editor.isActive("bold")} onClick={() => editor.chain().focus().toggleBold().run()}><Bold className="size-4" /></ToolButton><ToolButton label="Italic" active={editor.isActive("italic")} onClick={() => editor.chain().focus().toggleItalic().run()}><Italic className="size-4" /></ToolButton><ToolButton label="Underline" active={editor.isActive("underline")} onClick={() => editor.chain().focus().toggleUnderline().run()}><UnderlineIcon className="size-4" /></ToolButton><ToolButton label="Strike through" active={editor.isActive("strike")} onClick={() => editor.chain().focus().toggleStrike().run()}><Strikethrough className="size-4" /></ToolButton></div></PopoverContent></Popover>
       <Popover>
         <PopoverTrigger asChild>
           <Button type="button" size="icon-sm" variant="ghost" aria-label="Text alignment" title="Text alignment" className={cn("size-9 rounded-lg text-zinc-300 hover:bg-white/10 hover:text-white", editor.isActive({ textAlign: "center" }) || editor.isActive({ textAlign: "right" }) || editor.isActive({ textAlign: "justify" }) ? "bg-primary text-primary-foreground hover:bg-primary hover:text-primary-foreground" : "")}>
@@ -264,7 +264,7 @@ function Toolbar({
           </div>
           <div className="mt-2 border-t pt-2">
             <p className="px-2 pb-1 text-xs font-semibold text-foreground">Edit selected table</p>
-            <div className="grid grid-cols-2 gap-1">
+            <div className="grid grid-cols-1 gap-1">
               {[
                 ["Add row above", () => editor.chain().focus().addRowBefore().run()],
                 ["Add row below", () => editor.chain().focus().addRowAfter().run()],
