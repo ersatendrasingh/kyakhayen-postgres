@@ -4,12 +4,6 @@ import MobileMenu from "@/components/header/mobile-menu";
 import ScrollToTopButton from "@/components/scroll-to-top-button";
 import { ModeToggle } from "@/components/mode-toggle";
 
-// Website pages read from Neon at request time. Keeping this route group
-// dynamic prevents Vercel's build workers from prerendering every DB-backed
-// page concurrently and exhausting Neon's small connection pool.
-export const dynamic = "force-dynamic";
-export const revalidate = 0;
-
 const WebsiteLayout = ({ children }: { children: React.ReactNode }) => {
   return (
     <div className="flex min-h-svh flex-col bg-[#fcf8f0] dark:bg-[#091712]">
