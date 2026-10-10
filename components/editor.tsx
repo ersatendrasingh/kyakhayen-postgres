@@ -22,6 +22,7 @@ import {
   ListOrdered,
   Minus,
   Pilcrow,
+  Plus as PlusIcon,
   Quote,
   Redo2,
   Strikethrough,
@@ -81,7 +82,7 @@ function ToolButton({
       disabled={disabled}
       onClick={onClick}
       className={cn(
-        "size-9 cursor-pointer rounded-lg text-zinc-300 hover:bg-white/10 hover:text-white",
+        "size-9 cursor-pointer rounded-lg text-background/80 hover:bg-background/10 hover:text-background",
         active && "bg-primary text-primary-foreground hover:bg-primary hover:text-primary-foreground"
       )}
     >
@@ -215,10 +216,10 @@ function Toolbar({
   onLibrary: () => void;
 }) {
   return (
-    <div className="sticky top-20 z-30 flex flex-nowrap items-center gap-1 overflow-x-auto border-b border-white/10 bg-zinc-950 p-2 shadow-lg shadow-black/10 backdrop-blur [scrollbar-width:none] [&::-webkit-scrollbar]:hidden" role="toolbar" aria-label="Rich text formatting">
+    <div className="sticky top-20 z-30 flex flex-nowrap items-center gap-1 overflow-x-auto border-b border-background/10 bg-foreground p-2 shadow-lg shadow-foreground/15 backdrop-blur [scrollbar-width:none] [&::-webkit-scrollbar]:hidden" role="toolbar" aria-label="Rich text formatting">
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
-          <Button type="button" variant="outline" className="h-9 min-w-28 justify-between rounded-lg border-white/15 bg-white/5 px-3 text-sm text-zinc-100 hover:bg-white/10 hover:text-white">
+          <Button type="button" variant="outline" className="h-9 min-w-28 justify-between rounded-lg border-background/20 bg-background/10 px-3 text-sm text-background hover:bg-background/20 hover:text-background">
             {editor.isActive("heading", { level: 1 }) ? "Heading 1" : editor.isActive("heading", { level: 2 }) ? "Heading 2" : editor.isActive("heading", { level: 3 }) ? "Heading 3" : "Paragraph"}
             <ChevronDown className="size-4 text-muted-foreground" />
           </Button>
@@ -231,36 +232,26 @@ function Toolbar({
         </DropdownMenuContent>
       </DropdownMenu>
       <span className="mx-1 h-6 w-px bg-border" />
-      <ToolButton label="Bold" active={editor.isActive("bold")} onClick={() => editor.chain().focus().toggleBold().run()}><Bold className="size-4" /></ToolButton>
-      <ToolButton label="Italic" active={editor.isActive("italic")} onClick={() => editor.chain().focus().toggleItalic().run()}><Italic className="size-4" /></ToolButton>
-      <ToolButton label="Underline" active={editor.isActive("underline")} onClick={() => editor.chain().focus().toggleUnderline().run()}><UnderlineIcon className="size-4" /></ToolButton>
-      <ToolButton label="Strike through" active={editor.isActive("strike")} onClick={() => editor.chain().focus().toggleStrike().run()}><Strikethrough className="size-4" /></ToolButton>
+      <Popover><PopoverTrigger asChild><Button type="button" size="icon-sm" variant="ghost" title="Text styles" className="size-9 rounded-lg text-background/80 hover:bg-background/10 hover:text-background"><Bold className="size-4" /></Button></PopoverTrigger><PopoverContent align="start" sideOffset={8} className="w-auto rounded-xl border-border/50 bg-popover p-1.5 shadow-xl"><div className="flex gap-1"><ToolButton label="Bold" active={editor.isActive("bold")} onClick={() => editor.chain().focus().toggleBold().run()}><Bold className="size-4" /></ToolButton><ToolButton label="Italic" active={editor.isActive("italic")} onClick={() => editor.chain().focus().toggleItalic().run()}><Italic className="size-4" /></ToolButton><ToolButton label="Underline" active={editor.isActive("underline")} onClick={() => editor.chain().focus().toggleUnderline().run()}><UnderlineIcon className="size-4" /></ToolButton><ToolButton label="Strike through" active={editor.isActive("strike")} onClick={() => editor.chain().focus().toggleStrike().run()}><Strikethrough className="size-4" /></ToolButton></div></PopoverContent></Popover>
       <Popover>
         <PopoverTrigger asChild>
           <Button type="button" size="icon-sm" variant="ghost" aria-label="Text alignment" title="Text alignment" className={cn("size-9 rounded-lg text-zinc-300 hover:bg-white/10 hover:text-white", editor.isActive({ textAlign: "center" }) || editor.isActive({ textAlign: "right" }) || editor.isActive({ textAlign: "justify" }) ? "bg-primary text-primary-foreground hover:bg-primary hover:text-primary-foreground" : "")}>
             {editor.isActive({ textAlign: "center" }) ? <AlignCenter className="size-4" /> : editor.isActive({ textAlign: "right" }) ? <AlignRight className="size-4" /> : editor.isActive({ textAlign: "justify" }) ? <AlignJustify className="size-4" /> : <AlignLeft className="size-4" />}
           </Button>
         </PopoverTrigger>
-        <PopoverContent align="start" sideOffset={8} className="w-auto rounded-xl border-zinc-700 bg-zinc-900 p-1.5 text-white shadow-xl">
+        <PopoverContent align="start" sideOffset={8} className="w-auto rounded-xl border-border/50 bg-popover p-1.5 shadow-xl">
           <div className="flex items-center gap-1">
             {[["left", AlignLeft, "Align left"], ["center", AlignCenter, "Align center"], ["right", AlignRight, "Align right"], ["justify", AlignJustify, "Justify"]].map(([alignment, Icon, label]) => (
-              <Button key={alignment as string} type="button" size="icon" variant="ghost" title={label as string} aria-label={label as string} onClick={() => editor.chain().focus().setTextAlign(alignment as "left" | "center" | "right" | "justify").run()} className={cn("size-9 rounded-lg text-zinc-300 hover:bg-white/10 hover:text-white", editor.isActive({ textAlign: alignment }) && "bg-primary text-primary-foreground hover:bg-primary hover:text-primary-foreground")}><Icon className="size-4" /></Button>
+              <Button key={alignment as string} type="button" size="icon" variant="ghost" title={label as string} aria-label={label as string} onClick={() => editor.chain().focus().setTextAlign(alignment as "left" | "center" | "right" | "justify").run()} className={cn("size-9 rounded-lg text-foreground hover:bg-accent hover:text-accent-foreground", editor.isActive({ textAlign: alignment }) && "bg-primary text-primary-foreground hover:bg-primary hover:text-primary-foreground")}><Icon className="size-4" /></Button>
             ))}
           </div>
         </PopoverContent>
       </Popover>
       <span className="mx-1 h-6 w-px bg-border" />
-      <ToolButton label="Bullet list" active={editor.isActive("bulletList")} onClick={() => editor.chain().focus().toggleBulletList().run()}><List className="size-4" /></ToolButton>
-      <ToolButton label="Numbered list" active={editor.isActive("orderedList")} onClick={() => editor.chain().focus().toggleOrderedList().run()}><ListOrdered className="size-4" /></ToolButton>
-      <ToolButton label="Block quote" active={editor.isActive("blockquote")} onClick={() => editor.chain().focus().toggleBlockquote().run()}><Quote className="size-4" /></ToolButton>
-      <ToolButton label="Code block" active={editor.isActive("codeBlock")} onClick={() => editor.chain().focus().toggleCodeBlock().run()}><Code2 className="size-4" /></ToolButton>
-      <ToolButton label="Insert 3 by 3 table" onClick={() => editor.chain().focus().insertTable({ rows: 3, cols: 3, withHeaderRow: true }).run()}><Table2 className="size-4" /></ToolButton>
-      <ToolButton label="Horizontal line" onClick={() => editor.chain().focus().setHorizontalRule().run()}><Minus className="size-4" /></ToolButton>
-      <span className="mx-1 h-6 w-px bg-border" />
-      <ToolButton label="Insert link" active={editor.isActive("link")} onClick={onLink}><Link2 className="size-4" /></ToolButton>
+      <Popover><PopoverTrigger asChild><Button type="button" size="icon-sm" variant="ghost" title="Blocks and lists" className="size-9 rounded-lg text-background/80 hover:bg-background/10 hover:text-background"><List className="size-4" /></Button></PopoverTrigger><PopoverContent align="start" sideOffset={8} className="w-auto rounded-xl border-border/50 bg-popover p-1.5 shadow-xl"><div className="flex gap-1"><ToolButton label="Bullet list" active={editor.isActive("bulletList")} onClick={() => editor.chain().focus().toggleBulletList().run()}><List className="size-4" /></ToolButton><ToolButton label="Numbered list" active={editor.isActive("orderedList")} onClick={() => editor.chain().focus().toggleOrderedList().run()}><ListOrdered className="size-4" /></ToolButton><ToolButton label="Block quote" active={editor.isActive("blockquote")} onClick={() => editor.chain().focus().toggleBlockquote().run()}><Quote className="size-4" /></ToolButton><ToolButton label="Code block" active={editor.isActive("codeBlock")} onClick={() => editor.chain().focus().toggleCodeBlock().run()}><Code2 className="size-4" /></ToolButton></div></PopoverContent></Popover>
+      <Popover><PopoverTrigger asChild><Button type="button" size="icon-sm" variant="ghost" title="Insert content" className="size-9 rounded-lg text-background/80 hover:bg-background/10 hover:text-background"><PlusIcon className="size-4" /></Button></PopoverTrigger><PopoverContent align="start" sideOffset={8} className="w-auto rounded-xl border-border/50 bg-popover p-1.5 shadow-xl"><div className="flex gap-1"><ToolButton label="Insert 3 by 3 table" onClick={() => editor.chain().focus().insertTable({ rows: 3, cols: 3, withHeaderRow: true }).run()}><Table2 className="size-4" /></ToolButton><ToolButton label="Horizontal line" onClick={() => editor.chain().focus().setHorizontalRule().run()}><Minus className="size-4" /></ToolButton><ToolButton label="Insert link" active={editor.isActive("link")} onClick={onLink}><Link2 className="size-4" /></ToolButton><ToolButton label="Choose image from media library" onClick={onLibrary}><ImagePlus className="size-4" /></ToolButton><ToolButton label="Insert image URL" onClick={onImageUrl}><ImagePlus className="size-4 opacity-60" /></ToolButton></div></PopoverContent></Popover>
+      <span className="mx-1 h-6 w-px bg-background/20" />
       <ToolButton label="Remove link" disabled={!editor.isActive("link")} onClick={() => editor.chain().focus().unsetLink().run()}><Unlink2 className="size-4" /></ToolButton>
-      <ToolButton label="Choose image from media library" onClick={onLibrary}><ImagePlus className="size-4" /></ToolButton>
-      <ToolButton label="Insert image URL" onClick={onImageUrl}><ImagePlus className="size-4 opacity-60" /></ToolButton>
       <span className="mx-1 h-6 w-px bg-border" />
       <ToolButton label="Undo" disabled={!editor.can().chain().focus().undo().run()} onClick={() => editor.chain().focus().undo().run()}><Undo2 className="size-4" /></ToolButton>
       <ToolButton label="Redo" disabled={!editor.can().chain().focus().redo().run()} onClick={() => editor.chain().focus().redo().run()}><Redo2 className="size-4" /></ToolButton>
