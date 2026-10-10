@@ -81,7 +81,7 @@ function ToolButton({
       disabled={disabled}
       onClick={onClick}
       className={cn(
-        "size-9 cursor-pointer rounded-lg text-foreground hover:bg-accent hover:text-accent-foreground",
+        "editor-tool-button size-9 cursor-pointer rounded-lg text-foreground hover:bg-accent hover:text-accent-foreground",
         active && "bg-primary text-primary-foreground hover:bg-primary hover:text-primary-foreground"
       )}
     >
@@ -215,7 +215,7 @@ function Toolbar({
   onLibrary: () => void;
 }) {
   return (
-    <div className="sticky top-20 z-30 flex flex-nowrap items-center gap-1 overflow-x-auto border-b border-background/10 bg-foreground p-2 shadow-lg shadow-foreground/15 backdrop-blur [scrollbar-width:none] [&::-webkit-scrollbar]:hidden" role="toolbar" aria-label="Rich text formatting">
+    <div className="sticky top-20 z-30 flex flex-nowrap items-center gap-1 overflow-x-auto border-b border-background/10 bg-foreground p-2 shadow-lg shadow-foreground/15 backdrop-blur [scrollbar-width:none] [&::-webkit-scrollbar]:hidden [&>button.editor-tool-button]:text-background/80 [&>button.editor-tool-button]:hover:bg-background/10 [&>button.editor-tool-button]:hover:text-background" role="toolbar" aria-label="Rich text formatting">
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
           <Button type="button" variant="ghost" className="h-9 min-w-28 justify-between rounded-lg border-0 px-3 text-sm text-background hover:bg-background/10 hover:text-background">
