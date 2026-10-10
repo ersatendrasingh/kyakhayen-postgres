@@ -7,6 +7,7 @@ import { toast } from "sonner";
 
 import type { RecipeEditorRecord } from "@/components/admin/recipes/editor/recipe-editor-types";
 import { Editor } from "@/components/editor";
+import { DateTimePicker } from "@/components/admin/recipes/editor/date-time-picker";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -133,11 +134,11 @@ export function RecipeOverviewCard({ recipe }: { recipe: RecipeEditorRecord }) {
             <div className="grid gap-3 sm:grid-cols-2">
               <div className="space-y-2">
                 <Label htmlFor="recipe-created-at">Created date</Label>
-                <Input id="recipe-created-at" type="datetime-local" value={createdAt} onChange={(event) => setCreatedAt(event.target.value)} className="h-11 rounded-xl" />
+                <DateTimePicker value={createdAt} onChange={setCreatedAt} />
               </div>
               <div className="space-y-2">
                 <Label htmlFor="recipe-published-at">Published date</Label>
-                <Input id="recipe-published-at" type="datetime-local" value={publishedAt} onChange={(event) => setPublishedAt(event.target.value)} className="h-11 rounded-xl" />
+                <DateTimePicker value={publishedAt} onChange={setPublishedAt} placeholder="Not published yet" />
               </div>
             </div>
             <p className="mt-3 text-xs text-muted-foreground">These dates control the recipe timeline and sitemap last-modified date.</p>

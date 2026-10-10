@@ -39,6 +39,8 @@
     "@tanstack/react-table": "^8.16.0",
     "@tiptap/core": "^3.23.6",
     "@tiptap/extension-link": "^3.23.6",
+    "@tiptap/extension-table": "^3.23.6",
+    "@tiptap/extension-text-align": "^3.23.6",
     "@tiptap/extension-underline": "^3.23.6",
     "@tiptap/pm": "^3.23.6",
     "@tiptap/react": "^3.23.6",

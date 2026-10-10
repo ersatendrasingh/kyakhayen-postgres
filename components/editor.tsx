@@ -5,6 +5,11 @@ import type { Editor as TipTapEditor } from "@tiptap/core";
 import { EditorContent, useEditor } from "@tiptap/react";
 import {
   Bold,
+  AlignCenter,
+  AlignJustify,
+  AlignLeft,
+  AlignRight,
+  ChevronDown,
   Code2,
   Eraser,
   Heading1,
@@ -20,6 +25,7 @@ import {
   Quote,
   Redo2,
   Strikethrough,
+  Table2,
   Underline as UnderlineIcon,
   Undo2,
   Unlink2,
@@ -27,6 +33,12 @@ import {
 
 import { MediaLibraryDialog } from "@/components/admin/media/media-library-dialog";
 import { Button } from "@/components/ui/button";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import {
   Dialog,
   DialogContent,
@@ -128,7 +140,7 @@ export const Editor = ({ value, onChange, compact = false }: EditorProps) => {
 
   return (
     <>
-      <div className="overflow-hidden rounded-xl border bg-background shadow-xs">
+      <div className="relative rounded-xl border bg-background shadow-xs">
         <Toolbar
           editor={editor}
           onLink={() => {
@@ -138,7 +150,7 @@ export const Editor = ({ value, onChange, compact = false }: EditorProps) => {
           onImageUrl={() => setImageOpen(true)}
           onLibrary={() => setLibraryOpen(true)}
         />
-        <EditorContent editor={editor} />
+        <div className="overflow-hidden rounded-b-xl"><EditorContent editor={editor} /></div>
       </div>
 
       <Dialog open={linkOpen} onOpenChange={setLinkOpen}>
@@ -202,21 +214,36 @@ function Toolbar({
   onLibrary: () => void;
 }) {
   return (
-    <div className="flex flex-wrap items-center gap-1 border-b bg-muted/20 p-2" role="toolbar" aria-label="Rich text formatting">
+    <div className="sticky top-20 z-30 flex flex-wrap items-center gap-1 border-b bg-background/95 p-2 shadow-sm backdrop-blur supports-[backdrop-filter]:bg-background/80" role="toolbar" aria-label="Rich text formatting">
+      <DropdownMenu>
+        <DropdownMenuTrigger asChild>
+          <Button type="button" variant="outline" className="h-9 min-w-28 justify-between rounded-lg px-3 text-sm">
+            {editor.isActive("heading", { level: 1 }) ? "Heading 1" : editor.isActive("heading", { level: 2 }) ? "Heading 2" : editor.isActive("heading", { level: 3 }) ? "Heading 3" : "Paragraph"}
+            <ChevronDown className="size-4 text-muted-foreground" />
+          </Button>
+        </DropdownMenuTrigger>
+        <DropdownMenuContent align="start" className="min-w-36">
+          <DropdownMenuItem onSelect={() => editor.chain().focus().setParagraph().run()}><Pilcrow className="size-4" />Paragraph</DropdownMenuItem>
+          <DropdownMenuItem onSelect={() => editor.chain().focus().toggleHeading({ level: 1 }).run()}><Heading1 className="size-4" />Heading 1</DropdownMenuItem>
+          <DropdownMenuItem onSelect={() => editor.chain().focus().toggleHeading({ level: 2 }).run()}><Heading2 className="size-4" />Heading 2</DropdownMenuItem>
+          <DropdownMenuItem onSelect={() => editor.chain().focus().toggleHeading({ level: 3 }).run()}><Heading3 className="size-4" />Heading 3</DropdownMenuItem>
+        </DropdownMenuContent>
+      </DropdownMenu>
+      <span className="mx-1 h-6 w-px bg-border" />
       <ToolButton label="Bold" active={editor.isActive("bold")} onClick={() => editor.chain().focus().toggleBold().run()}><Bold className="size-4" /></ToolButton>
       <ToolButton label="Italic" active={editor.isActive("italic")} onClick={() => editor.chain().focus().toggleItalic().run()}><Italic className="size-4" /></ToolButton>
       <ToolButton label="Underline" active={editor.isActive("underline")} onClick={() => editor.chain().focus().toggleUnderline().run()}><UnderlineIcon className="size-4" /></ToolButton>
       <ToolButton label="Strike through" active={editor.isActive("strike")} onClick={() => editor.chain().focus().toggleStrike().run()}><Strikethrough className="size-4" /></ToolButton>
-      <span className="mx-1 h-6 w-px bg-border" />
-      <ToolButton label="Paragraph" active={editor.isActive("paragraph")} onClick={() => editor.chain().focus().setParagraph().run()}><Pilcrow className="size-4" /></ToolButton>
-      <ToolButton label="Heading 1" active={editor.isActive("heading", { level: 1 })} onClick={() => editor.chain().focus().toggleHeading({ level: 1 }).run()}><Heading1 className="size-4" /></ToolButton>
-      <ToolButton label="Heading 2" active={editor.isActive("heading", { level: 2 })} onClick={() => editor.chain().focus().toggleHeading({ level: 2 }).run()}><Heading2 className="size-4" /></ToolButton>
-      <ToolButton label="Heading 3" active={editor.isActive("heading", { level: 3 })} onClick={() => editor.chain().focus().toggleHeading({ level: 3 }).run()}><Heading3 className="size-4" /></ToolButton>
+      <ToolButton label="Align left" active={editor.isActive({ textAlign: "left" })} onClick={() => editor.chain().focus().setTextAlign("left").run()}><AlignLeft className="size-4" /></ToolButton>
+      <ToolButton label="Align center" active={editor.isActive({ textAlign: "center" })} onClick={() => editor.chain().focus().setTextAlign("center").run()}><AlignCenter className="size-4" /></ToolButton>
+      <ToolButton label="Align right" active={editor.isActive({ textAlign: "right" })} onClick={() => editor.chain().focus().setTextAlign("right").run()}><AlignRight className="size-4" /></ToolButton>
+      <ToolButton label="Justify" active={editor.isActive({ textAlign: "justify" })} onClick={() => editor.chain().focus().setTextAlign("justify").run()}><AlignJustify className="size-4" /></ToolButton>
       <span className="mx-1 h-6 w-px bg-border" />
       <ToolButton label="Bullet list" active={editor.isActive("bulletList")} onClick={() => editor.chain().focus().toggleBulletList().run()}><List className="size-4" /></ToolButton>
       <ToolButton label="Numbered list" active={editor.isActive("orderedList")} onClick={() => editor.chain().focus().toggleOrderedList().run()}><ListOrdered className="size-4" /></ToolButton>
       <ToolButton label="Block quote" active={editor.isActive("blockquote")} onClick={() => editor.chain().focus().toggleBlockquote().run()}><Quote className="size-4" /></ToolButton>
       <ToolButton label="Code block" active={editor.isActive("codeBlock")} onClick={() => editor.chain().focus().toggleCodeBlock().run()}><Code2 className="size-4" /></ToolButton>
+      <ToolButton label="Insert 3 by 3 table" onClick={() => editor.chain().focus().insertTable({ rows: 3, cols: 3, withHeaderRow: true }).run()}><Table2 className="size-4" /></ToolButton>
       <ToolButton label="Horizontal line" onClick={() => editor.chain().focus().setHorizontalRule().run()}><Minus className="size-4" /></ToolButton>
       <span className="mx-1 h-6 w-px bg-border" />
       <ToolButton label="Insert link" active={editor.isActive("link")} onClick={onLink}><Link2 className="size-4" /></ToolButton>

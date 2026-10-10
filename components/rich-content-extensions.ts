@@ -1,5 +1,7 @@
 import { mergeAttributes, Node } from "@tiptap/core";
 import Link from "@tiptap/extension-link";
+import { Table, TableCell, TableHeader, TableRow } from "@tiptap/extension-table";
+import TextAlign from "@tiptap/extension-text-align";
 import Underline from "@tiptap/extension-underline";
 import StarterKit from "@tiptap/starter-kit";
 
@@ -43,5 +45,10 @@ export const richContentExtensions = [
     openOnClick: false,
   }),
   Underline,
+  TextAlign.configure({ types: ["heading", "paragraph"] }),
+  Table.configure({ resizable: true }),
+  TableRow,
+  TableHeader,
+  TableCell,
   RichImage,
 ];

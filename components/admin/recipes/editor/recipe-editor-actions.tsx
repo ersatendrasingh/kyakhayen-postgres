@@ -19,6 +19,7 @@ import {
 } from "@/components/ui/alert-dialog";
 import { Button } from "@/components/ui/button";
 import { Switch } from "@/components/ui/switch";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 
 export function RecipeEditorActions({
   recipeId,
@@ -98,6 +99,7 @@ export function RecipeEditorActions({
   };
 
   return (
+    <TooltipProvider delayDuration={200}>
     <div className="flex flex-wrap items-center gap-2">
       <Button variant="outline" asChild className="admin-taxonomy-hero-action cursor-pointer">
         <Link href="/admin/recipes">
@@ -105,26 +107,8 @@ export function RecipeEditorActions({
           Back
         </Link>
       </Button>
-      <div className="admin-taxonomy-hero-action flex h-10 items-center gap-3 rounded-xl border px-3 text-sm">
-        <Switch
-          checked={isPublished}
-          disabled={publishing}
-          onCheckedChange={(checked) => void updatePublished(checked)}
-          className="cursor-pointer"
-          aria-label="Toggle published status"
-        />
-        {isPublished ? "Published" : "Draft"}
-      </div>
-      <div className="admin-taxonomy-hero-action flex h-10 items-center gap-3 rounded-xl border px-3 text-sm">
-        <Switch
-          checked={isSeoReady}
-          disabled={seoUpdating || !isPublished}
-          onCheckedChange={(checked) => void updateSeoReady(checked)}
-          className="cursor-pointer"
-          aria-label="Toggle SEO ready status"
-        />
-        {isSeoReady ? "SEO ready" : "SEO held"}
-      </div>
+      <Tooltip><TooltipTrigger asChild><span className="admin-taxonomy-hero-action inline-flex size-10 items-center justify-center rounded-xl border"><Switch checked={isPublished} disabled={publishing} onCheckedChange={(checked) => void updatePublished(checked)} className="cursor-pointer" aria-label="Toggle published status" /></span></TooltipTrigger><TooltipContent>{isPublished ? "Published — click to move to draft" : "Draft — click to publish"}</TooltipContent></Tooltip>
+      <Tooltip><TooltipTrigger asChild><span className="admin-taxonomy-hero-action inline-flex size-10 items-center justify-center rounded-xl border"><Switch checked={isSeoReady} disabled={seoUpdating || !isPublished} onCheckedChange={(checked) => void updateSeoReady(checked)} className="cursor-pointer" aria-label="Toggle SEO ready status" /></span></TooltipTrigger><TooltipContent>{isSeoReady ? "SEO ready — included in sitemap" : "SEO held — excluded from sitemap"}</TooltipContent></Tooltip>
       <AlertDialog>
         <AlertDialogTrigger asChild>
           <Button
@@ -156,5 +140,6 @@ export function RecipeEditorActions({
         </AlertDialogContent>
       </AlertDialog>
     </div>
+    </TooltipProvider>
   );
 }

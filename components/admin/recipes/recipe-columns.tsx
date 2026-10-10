@@ -5,10 +5,13 @@ import Link from "next/link";
 import type { ColumnDef } from "@tanstack/react-table";
 import {
   ArrowUpDown,
+  Globe2,
   Gauge,
   ImageIcon,
   MoreHorizontal,
   Pencil,
+  SearchCheck,
+  SearchX,
   Trash2,
 } from "lucide-react";
 
@@ -181,7 +184,7 @@ export function getRecipeColumns(
       accessorKey: "isPublished",
       header: "Published",
       cell: ({ row }) => (
-        <div className="flex min-w-[120px] items-center gap-2">
+        <div className="flex min-w-[64px] items-center gap-2">
           <Switch
             aria-label={`${row.original.isPublished ? "Unpublish" : "Publish"} ${row.original.title}`}
             checked={row.original.isPublished}
@@ -189,9 +192,7 @@ export function getRecipeColumns(
             onCheckedChange={(checked) => onPublish(row.original, checked)}
             className="cursor-pointer"
           />
-          <Badge variant={row.original.isPublished ? "secondary" : "outline"}>
-            {row.original.isPublished ? "Live" : "Draft"}
-          </Badge>
+          {row.original.isPublished ? <span title="Published"><Globe2 className="size-4 text-emerald-600" /></span> : <span title="Draft"><Globe2 className="size-4 text-muted-foreground" /></span>}
         </div>
       ),
     },
@@ -199,7 +200,7 @@ export function getRecipeColumns(
       accessorKey: "isSeoReady",
       header: "SEO",
       cell: ({ row }) => (
-        <div className="flex min-w-[115px] items-center gap-2">
+        <div className="flex min-w-[64px] items-center gap-2">
           <Switch
             aria-label={`${row.original.isSeoReady ? "Remove from" : "Add to"} sitemap ${row.original.title}`}
             checked={row.original.isSeoReady}
@@ -207,9 +208,7 @@ export function getRecipeColumns(
             onCheckedChange={(checked) => onSeoReady(row.original, checked)}
             className="cursor-pointer"
           />
-          <Badge variant={row.original.isSeoReady ? "secondary" : "outline"}>
-            {row.original.isSeoReady ? "Indexed" : "Held"}
-          </Badge>
+          {row.original.isSeoReady ? <span title="SEO ready — included in sitemap"><SearchCheck className="size-4 text-emerald-600" /></span> : <span title="SEO held — excluded from sitemap"><SearchX className="size-4 text-muted-foreground" /></span>}
         </div>
       ),
     },
