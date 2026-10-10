@@ -107,8 +107,8 @@ export function RecipeEditorActions({
           Back
         </Link>
       </Button>
-      <Tooltip><TooltipTrigger asChild><span className="admin-taxonomy-hero-action inline-flex size-10 items-center justify-center rounded-xl border"><Switch checked={isPublished} disabled={publishing} onCheckedChange={(checked) => void updatePublished(checked)} className="cursor-pointer" aria-label="Toggle published status" /></span></TooltipTrigger><TooltipContent>{isPublished ? "Published — click to move to draft" : "Draft — click to publish"}</TooltipContent></Tooltip>
-      <Tooltip><TooltipTrigger asChild><span className="admin-taxonomy-hero-action inline-flex size-10 items-center justify-center rounded-xl border"><Switch checked={isSeoReady} disabled={seoUpdating || !isPublished} onCheckedChange={(checked) => void updateSeoReady(checked)} className="cursor-pointer" aria-label="Toggle SEO ready status" /></span></TooltipTrigger><TooltipContent>{isSeoReady ? "SEO ready — included in sitemap" : "SEO held — excluded from sitemap"}</TooltipContent></Tooltip>
+      <Tooltip><TooltipTrigger asChild><span className="admin-taxonomy-hero-action inline-flex size-10 items-center justify-center rounded-xl bg-muted/55"><Switch checked={isPublished} disabled={publishing} onCheckedChange={(checked) => void updatePublished(checked)} className="cursor-pointer" aria-label="Toggle published status" /></span></TooltipTrigger><TooltipContent>{isPublished ? "Published — click to move to draft" : "Draft — click to publish"}</TooltipContent></Tooltip>
+      <Tooltip><TooltipTrigger asChild><span className="admin-taxonomy-hero-action inline-flex size-10 items-center justify-center rounded-xl bg-muted/55"><Switch checked={isSeoReady} disabled={seoUpdating || !isPublished} onCheckedChange={(checked) => void updateSeoReady(checked)} className="cursor-pointer" aria-label="Toggle SEO ready status" /></span></TooltipTrigger><TooltipContent>{isSeoReady ? "SEO ready — included in sitemap" : "SEO held — excluded from sitemap"}</TooltipContent></Tooltip>
       <AlertDialog>
         <AlertDialogTrigger asChild>
           <Button

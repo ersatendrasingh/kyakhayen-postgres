@@ -22,7 +22,6 @@ import {
   ListOrdered,
   Minus,
   Pilcrow,
-  Plus as PlusIcon,
   Quote,
   Redo2,
   Strikethrough,
@@ -82,7 +81,7 @@ function ToolButton({
       disabled={disabled}
       onClick={onClick}
       className={cn(
-        "size-9 cursor-pointer rounded-lg text-background/80 hover:bg-background/10 hover:text-background",
+        "size-9 cursor-pointer rounded-lg text-foreground hover:bg-accent hover:text-accent-foreground",
         active && "bg-primary text-primary-foreground hover:bg-primary hover:text-primary-foreground"
       )}
     >
@@ -219,8 +218,8 @@ function Toolbar({
     <div className="sticky top-20 z-30 flex flex-nowrap items-center gap-1 overflow-x-auto border-b border-background/10 bg-foreground p-2 shadow-lg shadow-foreground/15 backdrop-blur [scrollbar-width:none] [&::-webkit-scrollbar]:hidden" role="toolbar" aria-label="Rich text formatting">
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
-          <Button type="button" variant="outline" className="h-9 min-w-28 justify-between rounded-lg border-background/20 bg-background/10 px-3 text-sm text-background hover:bg-background/20 hover:text-background">
-            {editor.isActive("heading", { level: 1 }) ? "Heading 1" : editor.isActive("heading", { level: 2 }) ? "Heading 2" : editor.isActive("heading", { level: 3 }) ? "Heading 3" : "Paragraph"}
+          <Button type="button" variant="ghost" className="h-9 min-w-28 justify-between rounded-lg border-0 px-3 text-sm text-background hover:bg-background/10 hover:text-background">
+            {editor.isActive("heading", { level: 1 }) ? "Heading 1" : editor.isActive("heading", { level: 2 }) ? "Heading 2" : editor.isActive("heading", { level: 3 }) ? "Heading 3" : editor.isActive("heading", { level: 4 }) ? "Heading 4" : editor.isActive("heading", { level: 5 }) ? "Heading 5" : editor.isActive("heading", { level: 6 }) ? "Heading 6" : "Paragraph"}
             <ChevronDown className="size-4 text-muted-foreground" />
           </Button>
         </DropdownMenuTrigger>
@@ -229,6 +228,9 @@ function Toolbar({
           <DropdownMenuItem onSelect={() => editor.chain().focus().toggleHeading({ level: 1 }).run()}><Heading1 className="size-4" />Heading 1</DropdownMenuItem>
           <DropdownMenuItem onSelect={() => editor.chain().focus().toggleHeading({ level: 2 }).run()}><Heading2 className="size-4" />Heading 2</DropdownMenuItem>
           <DropdownMenuItem onSelect={() => editor.chain().focus().toggleHeading({ level: 3 }).run()}><Heading3 className="size-4" />Heading 3</DropdownMenuItem>
+          <DropdownMenuItem onSelect={() => editor.chain().focus().toggleHeading({ level: 4 }).run()}>H4 <span>Heading 4</span></DropdownMenuItem>
+          <DropdownMenuItem onSelect={() => editor.chain().focus().toggleHeading({ level: 5 }).run()}>H5 <span>Heading 5</span></DropdownMenuItem>
+          <DropdownMenuItem onSelect={() => editor.chain().focus().toggleHeading({ level: 6 }).run()}>H6 <span>Heading 6</span></DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
       <span className="mx-1 h-6 w-px bg-border" />
@@ -248,8 +250,15 @@ function Toolbar({
         </PopoverContent>
       </Popover>
       <span className="mx-1 h-6 w-px bg-border" />
-      <Popover><PopoverTrigger asChild><Button type="button" size="icon-sm" variant="ghost" title="Blocks and lists" className="size-9 rounded-lg text-background/80 hover:bg-background/10 hover:text-background"><List className="size-4" /></Button></PopoverTrigger><PopoverContent align="start" sideOffset={8} className="w-auto rounded-xl border-border/50 bg-popover p-1.5 shadow-xl"><div className="flex gap-1"><ToolButton label="Bullet list" active={editor.isActive("bulletList")} onClick={() => editor.chain().focus().toggleBulletList().run()}><List className="size-4" /></ToolButton><ToolButton label="Numbered list" active={editor.isActive("orderedList")} onClick={() => editor.chain().focus().toggleOrderedList().run()}><ListOrdered className="size-4" /></ToolButton><ToolButton label="Block quote" active={editor.isActive("blockquote")} onClick={() => editor.chain().focus().toggleBlockquote().run()}><Quote className="size-4" /></ToolButton><ToolButton label="Code block" active={editor.isActive("codeBlock")} onClick={() => editor.chain().focus().toggleCodeBlock().run()}><Code2 className="size-4" /></ToolButton></div></PopoverContent></Popover>
-      <Popover><PopoverTrigger asChild><Button type="button" size="icon-sm" variant="ghost" title="Insert content" className="size-9 rounded-lg text-background/80 hover:bg-background/10 hover:text-background"><PlusIcon className="size-4" /></Button></PopoverTrigger><PopoverContent align="start" sideOffset={8} className="w-auto rounded-xl border-border/50 bg-popover p-1.5 shadow-xl"><div className="flex gap-1"><ToolButton label="Insert 3 by 3 table" onClick={() => editor.chain().focus().insertTable({ rows: 3, cols: 3, withHeaderRow: true }).run()}><Table2 className="size-4" /></ToolButton><ToolButton label="Horizontal line" onClick={() => editor.chain().focus().setHorizontalRule().run()}><Minus className="size-4" /></ToolButton><ToolButton label="Insert link" active={editor.isActive("link")} onClick={onLink}><Link2 className="size-4" /></ToolButton><ToolButton label="Choose image from media library" onClick={onLibrary}><ImagePlus className="size-4" /></ToolButton><ToolButton label="Insert image URL" onClick={onImageUrl}><ImagePlus className="size-4 opacity-60" /></ToolButton></div></PopoverContent></Popover>
+      <ToolButton label="Bullet list" active={editor.isActive("bulletList")} onClick={() => editor.chain().focus().toggleBulletList().run()}><List className="size-4" /></ToolButton>
+      <ToolButton label="Numbered list" active={editor.isActive("orderedList")} onClick={() => editor.chain().focus().toggleOrderedList().run()}><ListOrdered className="size-4" /></ToolButton>
+      <ToolButton label="Block quote" active={editor.isActive("blockquote")} onClick={() => editor.chain().focus().toggleBlockquote().run()}><Quote className="size-4" /></ToolButton>
+      <ToolButton label="Code block" active={editor.isActive("codeBlock")} onClick={() => editor.chain().focus().toggleCodeBlock().run()}><Code2 className="size-4" /></ToolButton>
+      <ToolButton label="Insert table" onClick={() => editor.chain().focus().insertTable({ rows: 3, cols: 3, withHeaderRow: true }).run()}><Table2 className="size-4" /></ToolButton>
+      <ToolButton label="Horizontal line" onClick={() => editor.chain().focus().setHorizontalRule().run()}><Minus className="size-4" /></ToolButton>
+      <ToolButton label="Insert link" active={editor.isActive("link")} onClick={onLink}><Link2 className="size-4" /></ToolButton>
+      <ToolButton label="Choose image from media library" onClick={onLibrary}><ImagePlus className="size-4" /></ToolButton>
+      <ToolButton label="Insert image URL" onClick={onImageUrl}><ImagePlus className="size-4 opacity-60" /></ToolButton>
       <span className="mx-1 h-6 w-px bg-background/20" />
       <ToolButton label="Remove link" disabled={!editor.isActive("link")} onClick={() => editor.chain().focus().unsetLink().run()}><Unlink2 className="size-4" /></ToolButton>
       <span className="mx-1 h-6 w-px bg-border" />
