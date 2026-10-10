@@ -4,6 +4,10 @@ import MobileMenu from "@/components/header/mobile-menu";
 import ScrollToTopButton from "@/components/scroll-to-top-button";
 import { ModeToggle } from "@/components/mode-toggle";
 
+// Keep public DB-backed requests close to the primary Indian audience and
+// much closer to the Neon Singapore region than Vercel's default US region.
+export const preferredRegion = "bom1";
+
 const WebsiteLayout = ({ children }: { children: React.ReactNode }) => {
   return (
     <div className="flex min-h-svh flex-col bg-[#fcf8f0] dark:bg-[#091712]">
