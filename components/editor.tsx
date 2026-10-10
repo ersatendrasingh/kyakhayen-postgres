@@ -39,6 +39,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import {
   Dialog,
   DialogContent,
@@ -80,7 +81,7 @@ function ToolButton({
       disabled={disabled}
       onClick={onClick}
       className={cn(
-        "size-9 cursor-pointer rounded-lg text-muted-foreground hover:text-foreground",
+        "size-9 cursor-pointer rounded-lg text-zinc-300 hover:bg-white/10 hover:text-white",
         active && "bg-primary text-primary-foreground hover:bg-primary hover:text-primary-foreground"
       )}
     >
@@ -214,10 +215,10 @@ function Toolbar({
   onLibrary: () => void;
 }) {
   return (
-    <div className="sticky top-20 z-30 flex flex-wrap items-center gap-1 border-b bg-background/95 p-2 shadow-sm backdrop-blur supports-[backdrop-filter]:bg-background/80" role="toolbar" aria-label="Rich text formatting">
+    <div className="sticky top-20 z-30 flex flex-nowrap items-center gap-1 overflow-x-auto border-b border-white/10 bg-zinc-950 p-2 shadow-lg shadow-black/10 backdrop-blur [scrollbar-width:none] [&::-webkit-scrollbar]:hidden" role="toolbar" aria-label="Rich text formatting">
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
-          <Button type="button" variant="outline" className="h-9 min-w-28 justify-between rounded-lg px-3 text-sm">
+          <Button type="button" variant="outline" className="h-9 min-w-28 justify-between rounded-lg border-white/15 bg-white/5 px-3 text-sm text-zinc-100 hover:bg-white/10 hover:text-white">
             {editor.isActive("heading", { level: 1 }) ? "Heading 1" : editor.isActive("heading", { level: 2 }) ? "Heading 2" : editor.isActive("heading", { level: 3 }) ? "Heading 3" : "Paragraph"}
             <ChevronDown className="size-4 text-muted-foreground" />
           </Button>
@@ -234,19 +235,20 @@ function Toolbar({
       <ToolButton label="Italic" active={editor.isActive("italic")} onClick={() => editor.chain().focus().toggleItalic().run()}><Italic className="size-4" /></ToolButton>
       <ToolButton label="Underline" active={editor.isActive("underline")} onClick={() => editor.chain().focus().toggleUnderline().run()}><UnderlineIcon className="size-4" /></ToolButton>
       <ToolButton label="Strike through" active={editor.isActive("strike")} onClick={() => editor.chain().focus().toggleStrike().run()}><Strikethrough className="size-4" /></ToolButton>
-      <DropdownMenu>
-        <DropdownMenuTrigger asChild>
-          <Button type="button" size="icon-sm" variant="ghost" aria-label="Text alignment" title="Text alignment" className={cn("size-9 rounded-lg text-muted-foreground hover:text-foreground", editor.isActive({ textAlign: "center" }) || editor.isActive({ textAlign: "right" }) || editor.isActive({ textAlign: "justify" }) ? "bg-primary text-primary-foreground hover:bg-primary hover:text-primary-foreground" : "")}>
+      <Popover>
+        <PopoverTrigger asChild>
+          <Button type="button" size="icon-sm" variant="ghost" aria-label="Text alignment" title="Text alignment" className={cn("size-9 rounded-lg text-zinc-300 hover:bg-white/10 hover:text-white", editor.isActive({ textAlign: "center" }) || editor.isActive({ textAlign: "right" }) || editor.isActive({ textAlign: "justify" }) ? "bg-primary text-primary-foreground hover:bg-primary hover:text-primary-foreground" : "")}>
             {editor.isActive({ textAlign: "center" }) ? <AlignCenter className="size-4" /> : editor.isActive({ textAlign: "right" }) ? <AlignRight className="size-4" /> : editor.isActive({ textAlign: "justify" }) ? <AlignJustify className="size-4" /> : <AlignLeft className="size-4" />}
           </Button>
-        </DropdownMenuTrigger>
-        <DropdownMenuContent align="start" className="min-w-40">
-          <DropdownMenuItem onSelect={() => editor.chain().focus().setTextAlign("left").run()}><AlignLeft className="size-4" />Align left</DropdownMenuItem>
-          <DropdownMenuItem onSelect={() => editor.chain().focus().setTextAlign("center").run()}><AlignCenter className="size-4" />Align center</DropdownMenuItem>
-          <DropdownMenuItem onSelect={() => editor.chain().focus().setTextAlign("right").run()}><AlignRight className="size-4" />Align right</DropdownMenuItem>
-          <DropdownMenuItem onSelect={() => editor.chain().focus().setTextAlign("justify").run()}><AlignJustify className="size-4" />Justify</DropdownMenuItem>
-        </DropdownMenuContent>
-      </DropdownMenu>
+        </PopoverTrigger>
+        <PopoverContent align="start" sideOffset={8} className="w-auto rounded-xl border-zinc-700 bg-zinc-900 p-1.5 text-white shadow-xl">
+          <div className="flex items-center gap-1">
+            {[["left", AlignLeft, "Align left"], ["center", AlignCenter, "Align center"], ["right", AlignRight, "Align right"], ["justify", AlignJustify, "Justify"]].map(([alignment, Icon, label]) => (
+              <Button key={alignment as string} type="button" size="icon" variant="ghost" title={label as string} aria-label={label as string} onClick={() => editor.chain().focus().setTextAlign(alignment as "left" | "center" | "right" | "justify").run()} className={cn("size-9 rounded-lg text-zinc-300 hover:bg-white/10 hover:text-white", editor.isActive({ textAlign: alignment }) && "bg-primary text-primary-foreground hover:bg-primary hover:text-primary-foreground")}><Icon className="size-4" /></Button>
+            ))}
+          </div>
+        </PopoverContent>
+      </Popover>
       <span className="mx-1 h-6 w-px bg-border" />
       <ToolButton label="Bullet list" active={editor.isActive("bulletList")} onClick={() => editor.chain().focus().toggleBulletList().run()}><List className="size-4" /></ToolButton>
       <ToolButton label="Numbered list" active={editor.isActive("orderedList")} onClick={() => editor.chain().focus().toggleOrderedList().run()}><ListOrdered className="size-4" /></ToolButton>
