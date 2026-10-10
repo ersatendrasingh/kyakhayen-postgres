@@ -234,10 +234,19 @@ function Toolbar({
       <ToolButton label="Italic" active={editor.isActive("italic")} onClick={() => editor.chain().focus().toggleItalic().run()}><Italic className="size-4" /></ToolButton>
       <ToolButton label="Underline" active={editor.isActive("underline")} onClick={() => editor.chain().focus().toggleUnderline().run()}><UnderlineIcon className="size-4" /></ToolButton>
       <ToolButton label="Strike through" active={editor.isActive("strike")} onClick={() => editor.chain().focus().toggleStrike().run()}><Strikethrough className="size-4" /></ToolButton>
-      <ToolButton label="Align left" active={editor.isActive({ textAlign: "left" })} onClick={() => editor.chain().focus().setTextAlign("left").run()}><AlignLeft className="size-4" /></ToolButton>
-      <ToolButton label="Align center" active={editor.isActive({ textAlign: "center" })} onClick={() => editor.chain().focus().setTextAlign("center").run()}><AlignCenter className="size-4" /></ToolButton>
-      <ToolButton label="Align right" active={editor.isActive({ textAlign: "right" })} onClick={() => editor.chain().focus().setTextAlign("right").run()}><AlignRight className="size-4" /></ToolButton>
-      <ToolButton label="Justify" active={editor.isActive({ textAlign: "justify" })} onClick={() => editor.chain().focus().setTextAlign("justify").run()}><AlignJustify className="size-4" /></ToolButton>
+      <DropdownMenu>
+        <DropdownMenuTrigger asChild>
+          <Button type="button" size="icon-sm" variant="ghost" aria-label="Text alignment" title="Text alignment" className={cn("size-9 rounded-lg text-muted-foreground hover:text-foreground", editor.isActive({ textAlign: "center" }) || editor.isActive({ textAlign: "right" }) || editor.isActive({ textAlign: "justify" }) ? "bg-primary text-primary-foreground hover:bg-primary hover:text-primary-foreground" : "")}>
+            {editor.isActive({ textAlign: "center" }) ? <AlignCenter className="size-4" /> : editor.isActive({ textAlign: "right" }) ? <AlignRight className="size-4" /> : editor.isActive({ textAlign: "justify" }) ? <AlignJustify className="size-4" /> : <AlignLeft className="size-4" />}
+          </Button>
+        </DropdownMenuTrigger>
+        <DropdownMenuContent align="start" className="min-w-40">
+          <DropdownMenuItem onSelect={() => editor.chain().focus().setTextAlign("left").run()}><AlignLeft className="size-4" />Align left</DropdownMenuItem>
+          <DropdownMenuItem onSelect={() => editor.chain().focus().setTextAlign("center").run()}><AlignCenter className="size-4" />Align center</DropdownMenuItem>
+          <DropdownMenuItem onSelect={() => editor.chain().focus().setTextAlign("right").run()}><AlignRight className="size-4" />Align right</DropdownMenuItem>
+          <DropdownMenuItem onSelect={() => editor.chain().focus().setTextAlign("justify").run()}><AlignJustify className="size-4" />Justify</DropdownMenuItem>
+        </DropdownMenuContent>
+      </DropdownMenu>
       <span className="mx-1 h-6 w-px bg-border" />
       <ToolButton label="Bullet list" active={editor.isActive("bulletList")} onClick={() => editor.chain().focus().toggleBulletList().run()}><List className="size-4" /></ToolButton>
       <ToolButton label="Numbered list" active={editor.isActive("orderedList")} onClick={() => editor.chain().focus().toggleOrderedList().run()}><ListOrdered className="size-4" /></ToolButton>

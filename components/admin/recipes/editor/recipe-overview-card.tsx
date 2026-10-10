@@ -72,7 +72,7 @@ export function RecipeOverviewCard({ recipe }: { recipe: RecipeEditorRecord }) {
   };
 
   return (
-    <Card className="overflow-hidden rounded-2xl py-0">
+    <Card className="rounded-2xl py-0">
       <CardHeader className="border-b p-5 sm:p-6">
         <CardTitle className="flex items-center gap-3 text-xl">
           <span className="flex size-11 items-center justify-center rounded-xl bg-primary/10 text-primary">
