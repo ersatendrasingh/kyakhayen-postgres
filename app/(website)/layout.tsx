@@ -8,6 +8,12 @@ import { ModeToggle } from "@/components/mode-toggle";
 // much closer to the Neon Singapore region than Vercel's default US region.
 export const preferredRegion = "bom1";
 
+// Public pages read from Neon at request time. Prevent Vercel's build workers
+// from prerendering every DB-backed page concurrently and exhausting Neon's
+// small connection pool during `next build`.
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
+
 const WebsiteLayout = ({ children }: { children: React.ReactNode }) => {
   return (
     <div className="flex min-h-svh flex-col bg-[#fcf8f0] dark:bg-[#091712]">
