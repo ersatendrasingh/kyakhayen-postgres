@@ -79,6 +79,7 @@ function ToolButton({
       aria-label={label}
       title={label}
       disabled={disabled}
+      onMouseDown={(event) => event.preventDefault()}
       onClick={onClick}
       className={cn(
         "editor-tool-button size-9 cursor-pointer rounded-lg text-foreground hover:bg-accent hover:text-accent-foreground",
@@ -225,12 +226,12 @@ function Toolbar({
         </DropdownMenuTrigger>
         <DropdownMenuContent align="start" className="min-w-36">
           <DropdownMenuItem onSelect={() => editor.chain().focus().setParagraph().run()}><Pilcrow className="size-4" />Paragraph</DropdownMenuItem>
-          <DropdownMenuItem onSelect={() => editor.chain().focus().toggleHeading({ level: 1 }).run()}><Heading1 className="size-4" />Heading 1</DropdownMenuItem>
-          <DropdownMenuItem onSelect={() => editor.chain().focus().toggleHeading({ level: 2 }).run()}><Heading2 className="size-4" />Heading 2</DropdownMenuItem>
-          <DropdownMenuItem onSelect={() => editor.chain().focus().toggleHeading({ level: 3 }).run()}><Heading3 className="size-4" />Heading 3</DropdownMenuItem>
-          <DropdownMenuItem onSelect={() => editor.chain().focus().toggleHeading({ level: 4 }).run()}>H4 <span>Heading 4</span></DropdownMenuItem>
-          <DropdownMenuItem onSelect={() => editor.chain().focus().toggleHeading({ level: 5 }).run()}>H5 <span>Heading 5</span></DropdownMenuItem>
-          <DropdownMenuItem onSelect={() => editor.chain().focus().toggleHeading({ level: 6 }).run()}>H6 <span>Heading 6</span></DropdownMenuItem>
+          <DropdownMenuItem onSelect={(event) => { event.preventDefault(); editor.chain().focus().setHeading({ level: 1 }).run(); }}><Heading1 className="size-4" />Heading 1</DropdownMenuItem>
+          <DropdownMenuItem onSelect={(event) => { event.preventDefault(); editor.chain().focus().setHeading({ level: 2 }).run(); }}><Heading2 className="size-4" />Heading 2</DropdownMenuItem>
+          <DropdownMenuItem onSelect={(event) => { event.preventDefault(); editor.chain().focus().setHeading({ level: 3 }).run(); }}><Heading3 className="size-4" />Heading 3</DropdownMenuItem>
+          <DropdownMenuItem onSelect={(event) => { event.preventDefault(); editor.chain().focus().setHeading({ level: 4 }).run(); }}>H4 <span>Heading 4</span></DropdownMenuItem>
+          <DropdownMenuItem onSelect={(event) => { event.preventDefault(); editor.chain().focus().setHeading({ level: 5 }).run(); }}>H5 <span>Heading 5</span></DropdownMenuItem>
+          <DropdownMenuItem onSelect={(event) => { event.preventDefault(); editor.chain().focus().setHeading({ level: 6 }).run(); }}>H6 <span>Heading 6</span></DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
       <span className="mx-1 h-6 w-px bg-border" />
@@ -254,7 +255,15 @@ function Toolbar({
       <ToolButton label="Numbered list" active={editor.isActive("orderedList")} onClick={() => editor.chain().focus().toggleOrderedList().run()}><ListOrdered className="size-4" /></ToolButton>
       <ToolButton label="Block quote" active={editor.isActive("blockquote")} onClick={() => editor.chain().focus().toggleBlockquote().run()}><Quote className="size-4" /></ToolButton>
       <ToolButton label="Code block" active={editor.isActive("codeBlock")} onClick={() => editor.chain().focus().toggleCodeBlock().run()}><Code2 className="size-4" /></ToolButton>
-      <ToolButton label="Insert table" onClick={() => editor.chain().focus().insertTable({ rows: 3, cols: 3, withHeaderRow: true }).run()}><Table2 className="size-4" /></ToolButton>
+      <Popover>
+        <PopoverTrigger asChild><Button type="button" size="icon-sm" variant="ghost" title="Insert table" aria-label="Insert table" className="size-9 rounded-lg text-background/80 hover:bg-background/10 hover:text-background"><Table2 className="size-4" /></Button></PopoverTrigger>
+        <PopoverContent align="start" sideOffset={8} className="w-48 rounded-xl border-border/50 bg-popover p-2 shadow-xl">
+          <p className="px-2 pb-1 text-xs font-medium text-muted-foreground">Insert table</p>
+          <div className="grid grid-cols-3 gap-1">
+            {[2, 3, 4].map((size) => <Button key={size} type="button" variant="ghost" className="h-9 rounded-lg text-xs" onMouseDown={(event) => event.preventDefault()} onClick={() => editor.chain().focus().insertTable({ rows: size, cols: size, withHeaderRow: true }).run()}>{size} × {size}</Button>)}
+          </div>
+        </PopoverContent>
+      </Popover>
       <ToolButton label="Horizontal line" onClick={() => editor.chain().focus().setHorizontalRule().run()}><Minus className="size-4" /></ToolButton>
       <ToolButton label="Insert link" active={editor.isActive("link")} onClick={onLink}><Link2 className="size-4" /></ToolButton>
       <ToolButton label="Choose image from media library" onClick={onLibrary}><ImagePlus className="size-4" /></ToolButton>
