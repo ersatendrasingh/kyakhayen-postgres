@@ -105,7 +105,7 @@ export const Editor = ({ value, onChange, compact = false }: EditorProps) => {
     editorProps: {
       attributes: {
         class: cn(
-          "rich-content px-4 py-4 text-sm leading-7 text-foreground focus:outline-none sm:text-base",
+          "rich-content bg-white px-4 py-4 text-sm leading-7 text-foreground focus:outline-none sm:text-base",
           compact ? "min-h-40" : "min-h-72"
         ),
       },
@@ -224,7 +224,7 @@ function Toolbar({
             <ChevronDown className="size-4 text-muted-foreground" />
           </Button>
         </DropdownMenuTrigger>
-        <DropdownMenuContent align="start" className="min-w-36">
+        <DropdownMenuContent align="start" className="min-w-36 bg-white text-foreground shadow-xl">
           <DropdownMenuItem onSelect={() => editor.chain().focus().setParagraph().run()}><Pilcrow className="size-4" />Paragraph</DropdownMenuItem>
           <DropdownMenuItem onSelect={(event) => { event.preventDefault(); editor.chain().focus().setHeading({ level: 1 }).run(); }}><Heading1 className="size-4" />Heading 1</DropdownMenuItem>
           <DropdownMenuItem onSelect={(event) => { event.preventDefault(); editor.chain().focus().setHeading({ level: 2 }).run(); }}><Heading2 className="size-4" />Heading 2</DropdownMenuItem>
@@ -242,7 +242,7 @@ function Toolbar({
             {editor.isActive({ textAlign: "center" }) ? <AlignCenter className="size-4" /> : editor.isActive({ textAlign: "right" }) ? <AlignRight className="size-4" /> : editor.isActive({ textAlign: "justify" }) ? <AlignJustify className="size-4" /> : <AlignLeft className="size-4" />}
           </Button>
         </PopoverTrigger>
-        <PopoverContent align="start" sideOffset={8} className="w-auto rounded-xl border-border/50 bg-popover p-1.5 shadow-xl">
+        <PopoverContent align="start" sideOffset={8} className="w-auto rounded-xl border-border/50 bg-white p-1.5 text-foreground shadow-xl">
           <div className="flex items-center gap-1">
             {[["left", AlignLeft, "Align left"], ["center", AlignCenter, "Align center"], ["right", AlignRight, "Align right"], ["justify", AlignJustify, "Justify"]].map(([alignment, Icon, label]) => (
               <Button key={alignment as string} type="button" size="icon" variant="ghost" title={label as string} aria-label={label as string} onClick={() => editor.chain().focus().setTextAlign(alignment as "left" | "center" | "right" | "justify").run()} className={cn("size-9 rounded-lg text-foreground hover:bg-accent hover:text-accent-foreground", editor.isActive({ textAlign: alignment }) && "bg-primary text-primary-foreground hover:bg-primary hover:text-primary-foreground")}><Icon className="size-4" /></Button>
@@ -257,10 +257,10 @@ function Toolbar({
       <ToolButton label="Code block" active={editor.isActive("codeBlock")} onClick={() => editor.chain().focus().toggleCodeBlock().run()}><Code2 className="size-4" /></ToolButton>
       <Popover>
         <PopoverTrigger asChild><Button type="button" size="icon-sm" variant="ghost" title="Insert table" aria-label="Insert table" className="size-9 rounded-lg text-background/80 hover:bg-background/10 hover:text-background"><Table2 className="size-4" /></Button></PopoverTrigger>
-        <PopoverContent align="start" sideOffset={8} className="w-48 rounded-xl border-border/50 bg-popover p-2 shadow-xl">
-          <p className="px-2 pb-1 text-xs font-medium text-muted-foreground">Insert table</p>
+        <PopoverContent align="start" sideOffset={8} className="w-48 rounded-xl border-border/50 bg-white p-2 text-foreground shadow-xl">
+          <p className="px-2 pb-1 text-xs font-semibold text-foreground">Insert table</p>
           <div className="grid grid-cols-3 gap-1">
-            {[2, 3, 4].map((size) => <Button key={size} type="button" variant="ghost" className="h-9 rounded-lg text-xs" onMouseDown={(event) => event.preventDefault()} onClick={() => editor.chain().focus().insertTable({ rows: size, cols: size, withHeaderRow: true }).run()}>{size} × {size}</Button>)}
+            {[2, 3, 4].map((size) => <Button key={size} type="button" variant="ghost" className="h-9 rounded-lg text-xs text-foreground hover:bg-accent hover:text-accent-foreground" onMouseDown={(event) => event.preventDefault()} onClick={() => editor.chain().focus().insertTable({ rows: size, cols: size, withHeaderRow: true }).run()}>{size} × {size}</Button>)}
           </div>
         </PopoverContent>
       </Popover>
