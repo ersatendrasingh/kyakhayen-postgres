@@ -1,0 +1,50 @@
+name: Backup Kyakhayen Database
+
+on:
+  schedule:
+    - cron: "30 20 * * *"
+  workflow_dispatch:
+
+concurrency:
+  group: backup-kyakhayen-database
+  cancel-in-progress: false
+
+jobs:
+  backup:
+    name: Backup MySQL
+    runs-on: ubuntu-latest
+    environment: KYAKHAYEN_DEPLOYMENT
+    env:
+      DEPLOY_HOST: ${{ secrets.DEPLOY_HOST || vars.DEPLOY_HOST || '15.207.104.91' }}
+      DEPLOY_USER: ${{ secrets.DEPLOY_USER || vars.DEPLOY_USER || 'ubuntu' }}
+      DEPLOY_PORT: ${{ secrets.DEPLOY_PORT || vars.DEPLOY_PORT || '22' }}
+      DEPLOY_PATH: ${{ secrets.DEPLOY_PATH || vars.DEPLOY_PATH || '/opt/kasa/kyakhayen' }}
+      DB_BACKUP_DIR: ${{ secrets.DB_BACKUP_DIR || vars.DB_BACKUP_DIR || '/opt/kasa/backups/kyakhayen-db' }}
+      DB_BACKUP_RETENTION_DAYS: ${{ secrets.DB_BACKUP_RETENTION_DAYS || vars.DB_BACKUP_RETENTION_DAYS || '30' }}
+      DB_BACKUP_S3_BUCKET: ${{ secrets.DB_BACKUP_S3_BUCKET || vars.DB_BACKUP_S3_BUCKET }}
+      DB_BACKUP_S3_PREFIX: ${{ secrets.DB_BACKUP_S3_PREFIX || vars.DB_BACKUP_S3_PREFIX || 'kyakhayen/mysql' }}
+      DEPLOY_SSH_KEY_PRESENT: ${{ secrets.DEPLOY_SSH_KEY != '' }}
+    steps:
+      - name: Validate backup inputs
+        run: |
+          test -n "$DEPLOY_HOST" || { echo "DEPLOY_HOST is empty"; exit 1; }
+          test -n "$DEPLOY_USER" || { echo "DEPLOY_USER is empty"; exit 1; }
+          test -n "$DEPLOY_PORT" || { echo "DEPLOY_PORT is empty"; exit 1; }
+          test -n "$DEPLOY_PATH" || { echo "DEPLOY_PATH is empty"; exit 1; }
+          test "$DEPLOY_SSH_KEY_PRESENT" = "true" || { echo "DEPLOY_SSH_KEY secret is empty"; exit 1; }
+
+      - name: Run backup over SSH
+        uses: appleboy/ssh-action@v1.2.0
+        with:
+          host: ${{ env.DEPLOY_HOST }}
+          username: ${{ env.DEPLOY_USER }}
+          key: ${{ secrets.DEPLOY_SSH_KEY }}
+          port: ${{ env.DEPLOY_PORT }}
+          command_timeout: 20m
+          envs: DEPLOY_PATH,DB_BACKUP_DIR,DB_BACKUP_RETENTION_DAYS,DB_BACKUP_S3_BUCKET,DB_BACKUP_S3_PREFIX
+          script: |
+            set -e
+            cd "$DEPLOY_PATH"
+            test -f .env || { echo ".env file missing in $DEPLOY_PATH"; exit 1; }
+            export NODE_ENV=production
+            npm run backup:db -- scheduled

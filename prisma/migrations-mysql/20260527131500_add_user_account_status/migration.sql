@@ -1,0 +1,4 @@
+ALTER TABLE `User`
+  ADD COLUMN `isActive` BOOLEAN NOT NULL DEFAULT true,
+  ADD COLUMN `suspendedAt` DATETIME(3) NULL,
+  ADD COLUMN `suspensionReason` TEXT NULL;

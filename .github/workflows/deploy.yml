@@ -1,0 +1,239 @@
+name: Deploy Kyakhayen
+
+on:
+  push:
+    branches:
+      - master
+  workflow_dispatch:
+
+concurrency:
+  group: deploy-kyakhayen
+  cancel-in-progress: true
+
+env:
+  NEXT_TELEMETRY_DISABLED: "1"
+
+jobs:
+  check:
+    name: Check
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Install dependencies
+        run: npm ci || npm install
+
+      - name: Lint report
+        run: npm run lint
+
+      - name: Typecheck
+        run: npm run typecheck
+
+      - name: Package source artifact
+        run: git archive --format=tar.gz --output=kyakhayen-source.tgz HEAD
+
+      - name: Upload source artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: kyakhayen-source
+          path: kyakhayen-source.tgz
+          retention-days: 3
+
+  deploy:
+    name: Deploy to AWS
+    runs-on: ubuntu-latest
+    needs: check
+    environment: KYAKHAYEN_DEPLOYMENT
+    timeout-minutes: 20
+    permissions:
+      contents: read
+    env:
+      DEPLOY_HOST: ${{ secrets.DEPLOY_HOST || vars.DEPLOY_HOST || '15.207.104.91' }}
+      DEPLOY_USER: ${{ secrets.DEPLOY_USER || vars.DEPLOY_USER || 'ubuntu' }}
+      DEPLOY_PORT: ${{ secrets.DEPLOY_PORT || vars.DEPLOY_PORT || '22' }}
+      DEPLOY_PATH: ${{ secrets.DEPLOY_PATH || vars.DEPLOY_PATH || '/opt/kasa/kyakhayen' }}
+      DEPLOY_RELEASES_DIR: ${{ secrets.DEPLOY_RELEASES_DIR || vars.DEPLOY_RELEASES_DIR || '/opt/kasa/kyakhayen-releases' }}
+      DEPLOY_CURRENT_LINK: ${{ secrets.DEPLOY_CURRENT_LINK || vars.DEPLOY_CURRENT_LINK || '/opt/kasa/kyakhayen-current' }}
+      DEPLOY_HEALTHCHECK_URL: ${{ secrets.DEPLOY_HEALTHCHECK_URL || vars.DEPLOY_HEALTHCHECK_URL || 'http://127.0.0.1:3002/' }}
+      DB_BACKUP_DIR: ${{ secrets.DB_BACKUP_DIR || vars.DB_BACKUP_DIR || '/opt/kasa/backups/kyakhayen-db' }}
+      DB_BACKUP_RETENTION_DAYS: ${{ secrets.DB_BACKUP_RETENTION_DAYS || vars.DB_BACKUP_RETENTION_DAYS || '30' }}
+      DB_BACKUP_S3_BUCKET: ${{ secrets.DB_BACKUP_S3_BUCKET || vars.DB_BACKUP_S3_BUCKET }}
+      DB_BACKUP_S3_PREFIX: ${{ secrets.DB_BACKUP_S3_PREFIX || vars.DB_BACKUP_S3_PREFIX || 'kyakhayen/mysql' }}
+      BUILD_NODE_OPTIONS: ${{ vars.BUILD_NODE_OPTIONS || '--max_old_space_size=2048' }}
+      DEPLOY_SWAP_FILE: ${{ vars.DEPLOY_SWAP_FILE || '/swapfile' }}
+      DEPLOY_SWAP_SIZE: ${{ vars.DEPLOY_SWAP_SIZE || '2G' }}
+      DEPLOY_SWAP_SIZE_MB: ${{ vars.DEPLOY_SWAP_SIZE_MB || '2048' }}
+      DEPLOY_SSH_KEY_PRESENT: ${{ secrets.DEPLOY_SSH_KEY != '' }}
+    steps:
+      - name: Validate deploy inputs
+        run: |
+          test -n "$DEPLOY_HOST" || { echo "DEPLOY_HOST is empty"; exit 1; }
+          test -n "$DEPLOY_USER" || { echo "DEPLOY_USER is empty"; exit 1; }
+          test -n "$DEPLOY_PORT" || { echo "DEPLOY_PORT is empty"; exit 1; }
+          test -n "$DEPLOY_PATH" || { echo "DEPLOY_PATH is empty"; exit 1; }
+          test "$DEPLOY_SSH_KEY_PRESENT" = "true" || { echo "DEPLOY_SSH_KEY secret is empty"; exit 1; }
+
+      - name: Download release artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: kyakhayen-source
+
+      - name: Configure SSH
+        run: |
+          mkdir -p ~/.ssh
+          printf '%s\n' "${{ secrets.DEPLOY_SSH_KEY }}" > ~/.ssh/kyakhayen_deploy_key
+          chmod 600 ~/.ssh/kyakhayen_deploy_key
+          ssh-keyscan -p "$DEPLOY_PORT" "$DEPLOY_HOST" >> ~/.ssh/known_hosts
+
+      - name: Upload release bundle
+        run: |
+          scp \
+            -i ~/.ssh/kyakhayen_deploy_key \
+            -P "$DEPLOY_PORT" \
+            -o ConnectTimeout=20 \
+            kyakhayen-source.tgz \
+            "$DEPLOY_USER@$DEPLOY_HOST:/tmp/kyakhayen-${GITHUB_SHA}.tgz"
+
+      - name: Deploy release
+        run: |
+          ssh \
+            -i ~/.ssh/kyakhayen_deploy_key \
+            -p "$DEPLOY_PORT" \
+            -o ConnectTimeout=20 \
+            "$DEPLOY_USER@$DEPLOY_HOST" \
+            "DEPLOY_PATH='$DEPLOY_PATH' DEPLOY_RELEASES_DIR='$DEPLOY_RELEASES_DIR' DEPLOY_CURRENT_LINK='$DEPLOY_CURRENT_LINK' DEPLOY_HEALTHCHECK_URL='$DEPLOY_HEALTHCHECK_URL' DB_BACKUP_DIR='$DB_BACKUP_DIR' DB_BACKUP_RETENTION_DAYS='$DB_BACKUP_RETENTION_DAYS' DB_BACKUP_S3_BUCKET='$DB_BACKUP_S3_BUCKET' DB_BACKUP_S3_PREFIX='$DB_BACKUP_S3_PREFIX' BUILD_NODE_OPTIONS='$BUILD_NODE_OPTIONS' DEPLOY_SWAP_FILE='$DEPLOY_SWAP_FILE' DEPLOY_SWAP_SIZE='$DEPLOY_SWAP_SIZE' DEPLOY_SWAP_SIZE_MB='$DEPLOY_SWAP_SIZE_MB' RELEASE_ID='$GITHUB_SHA' bash -s" <<'EOF'
+          set -Eeuo pipefail
+
+          release_dir="$DEPLOY_RELEASES_DIR/$RELEASE_ID"
+          bundle="/tmp/kyakhayen-${RELEASE_ID}.tgz"
+          previous_target=""
+
+          ensure_swap() {
+            if ! command -v swapon >/dev/null 2>&1; then
+              echo "swapon command not available; skipping swap setup"
+              return
+            fi
+
+            if swapon --noheadings --show | grep -q .; then
+              swapon --show
+              return
+            fi
+
+            local swap_file="${DEPLOY_SWAP_FILE:-/swapfile}"
+            local swap_size="${DEPLOY_SWAP_SIZE:-2G}"
+            local swap_size_mb="${DEPLOY_SWAP_SIZE_MB:-2048}"
+
+            echo "No active swap found. Creating ${swap_file} (${swap_size})."
+            if [ ! -f "$swap_file" ]; then
+              sudo fallocate -l "$swap_size" "$swap_file" || sudo dd if=/dev/zero of="$swap_file" bs=1M count="$swap_size_mb"
+              sudo chmod 600 "$swap_file"
+              sudo mkswap "$swap_file"
+            fi
+
+            sudo swapon "$swap_file"
+            if ! grep -qs "$swap_file none swap" /etc/fstab; then
+              echo "$swap_file none swap sw 0 0" | sudo tee -a /etc/fstab >/dev/null
+            fi
+            swapon --show
+          }
+
+          require_release_env() {
+            local missing=""
+            local required_names="
+              DATABASE_URL
+              AUTH_SECRET
+              NEXT_PUBLIC_APP_URL
+              NEXT_PUBLIC_MEDIA_URL
+              AWS_REGION
+              AWS_ACCESS_KEY_ID
+              AWS_SECRET_ACCESS_KEY
+              AWS_MEDIA_BUCKET_NAME
+              AWS_PRIVATE_BUCKET_NAME
+              REDIS_SERVER_HOST
+              REDIS_SERVER_PORT
+              MEAL_PLAN_WORKER_SECRET
+              RAZORPAY_KEY_ID
+              RAZORPAY_KEY_SECRET
+              RAZORPAY_WEBHOOK_SECRET
+              RESEND_API_KEY
+              EMAIL_FROM_ADDRESS
+              ADMIN_EMAIL
+            "
+
+            for name in $required_names; do
+              if ! grep -Eq "^${name}=.+" .env; then
+                missing="$missing $name"
+              fi
+            done
+
+            if [ -n "$missing" ]; then
+              echo "Release .env is missing required variables:$missing"
+              exit 1
+            fi
+          }
+
+          if [ -L "$DEPLOY_CURRENT_LINK" ]; then
+            previous_target="$(readlink -f "$DEPLOY_CURRENT_LINK")"
+          elif [ -d "$DEPLOY_PATH" ]; then
+            previous_target="$(readlink -f "$DEPLOY_PATH")"
+          fi
+
+          mkdir -p "$DEPLOY_RELEASES_DIR" "$release_dir"
+          tar -xzf "$bundle" -C "$release_dir"
+
+          if [ -f "$DEPLOY_PATH/.env" ]; then
+            cp "$DEPLOY_PATH/.env" "$release_dir/.env"
+          elif [ -n "$previous_target" ] && [ -f "$previous_target/.env" ]; then
+            cp "$previous_target/.env" "$release_dir/.env"
+          else
+            echo ".env file missing in $DEPLOY_PATH and previous release"
+            exit 1
+          fi
+
+          cd "$release_dir"
+          require_release_env
+          ensure_swap
+          npm ci || npm install
+
+          export NODE_ENV=production
+          node scripts/backup-database.mjs predeploy
+          npx prisma migrate deploy
+          export NODE_OPTIONS="${NODE_OPTIONS:-$BUILD_NODE_OPTIONS}"
+          export NEXT_PRIVATE_BUILD_WORKER_COUNT="${NEXT_PRIVATE_BUILD_WORKER_COUNT:-1}"
+          npm run build
+          npm prune --omit=dev
+
+          ln -sfn "$release_dir" "$DEPLOY_CURRENT_LINK"
+          export KYAKHAYEN_DEPLOY_PATH="$DEPLOY_CURRENT_LINK"
+
+          pm2 delete kyakhayen-recipe-view-worker >/dev/null 2>&1 || true
+          pm2 startOrReload "$DEPLOY_CURRENT_LINK/ecosystem.config.cjs" --update-env
+
+          sleep 8
+          if ! curl -fsS --max-time 15 "$DEPLOY_HEALTHCHECK_URL" >/dev/null; then
+            echo "Health check failed for $RELEASE_ID"
+            if [ -n "$previous_target" ] && [ -d "$previous_target" ]; then
+              ln -sfn "$previous_target" "$DEPLOY_CURRENT_LINK"
+              export KYAKHAYEN_DEPLOY_PATH="$DEPLOY_CURRENT_LINK"
+              pm2 reload "$DEPLOY_CURRENT_LINK/ecosystem.config.cjs" --update-env || true
+            fi
+            exit 1
+          fi
+
+          pm2 save
+          current_target="$(readlink -f "$DEPLOY_CURRENT_LINK")"
+          find "$DEPLOY_RELEASES_DIR" -mindepth 1 -maxdepth 1 -type d \
+            ! -path "$current_target" \
+            -printf '%T@ %p\0' \
+            | sort -z -n \
+            | head -z -n -4 \
+            | cut -z -d ' ' -f2- \
+            | xargs -0 -r rm -rf
+          rm -f "$bundle"
+          EOF

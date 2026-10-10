@@ -1,0 +1,558 @@
+[
+  {
+    "id": "7e6dd67e-d9bb-41a8-8183-898ceec271bf",
+    "title": "Bajra Roti",
+    "url": "http://localhost:3000/bajra-roti",
+    "slug": "bajra-roti",
+    "priorityScore": 116,
+    "family": "bread",
+    "views": 0,
+    "contentUpdatedAt": "2026-05-30T06:21:40.462Z",
+    "ingredients": [
+      "bajra (pearl millet)"
+    ],
+    "qualitySignals": {
+      "descriptionWords": 447,
+      "methodWords": 76,
+      "genericDescription": true,
+      "genericMethods": true,
+      "weakMethods": true,
+      "missingImage": false,
+      "missingMeta": false,
+      "noEngagement": true,
+      "ingredientCount": 3,
+      "methodCount": 4
+    },
+    "uniqueAngle": "Focus on dough or batter feel, pan heat and softness; explain how bajra (pearl millet) change texture.",
+    "sectionBriefs": [
+      "Why this recipe works: write 2 short paragraphs explaining the role of bajra (pearl millet), the cooking technique (controlled cooking), and the expected final texture.",
+      "Chef Tips: write 4 tips that mention exact cues for Bajra Roti, such as heat level, consistency, timing, aroma, colour or resting.",
+      "Common Mistakes: write 4 mistakes specific to this recipe. Avoid generic lines like \"do not overcook\" unless you explain what overcooking looks like here.",
+      "Serving Suggestions: write 3 practical pairings based on meal type, cuisine, texture contrast and portion size.",
+      "Storage Instructions: write realistic storage guidance. If it is fresh or drink-like, prefer same-day serving. If cooked, include cooling and reheating notes.",
+      "Variations: write 3-4 variations using believable swaps, spice changes, texture changes or lighter/richer versions.",
+      "FAQs: write 6 questions. Include make-ahead, texture fix, substitution, spice control, serving, and beginner difficulty. Answers must mention Bajra Roti naturally."
+    ]
+  },
+  {
+    "id": "2b0d404a-12b3-4cdc-947f-c99e7ec46f45",
+    "title": "Blueberries",
+    "url": "http://localhost:3000/blueberries",
+    "slug": "blueberries",
+    "priorityScore": 98,
+    "family": "general",
+    "views": 1,
+    "contentUpdatedAt": "2026-05-30T06:21:40.967Z",
+    "ingredients": [
+      "blueberries"
+    ],
+    "qualitySignals": {
+      "descriptionWords": 366,
+      "methodWords": 53,
+      "genericDescription": true,
+      "genericMethods": false,
+      "weakMethods": true,
+      "missingImage": false,
+      "missingMeta": true,
+      "noEngagement": true,
+      "ingredientCount": 1,
+      "methodCount": 4
+    },
+    "uniqueAngle": "Position this as a quick practical recipe, but add real cooking cues so it does not read like thin content.",
+    "sectionBriefs": [
+      "Why this recipe works: write 2 short paragraphs explaining the role of blueberries, the cooking technique (controlled cooking), and the expected final texture.",
+      "Chef Tips: write 4 tips that mention exact cues for Blueberries, such as heat level, consistency, timing, aroma, colour or resting.",
+      "Common Mistakes: write 4 mistakes specific to this recipe. Avoid generic lines like \"do not overcook\" unless you explain what overcooking looks like here.",
+      "Serving Suggestions: write 3 practical pairings based on meal type, cuisine, texture contrast and portion size.",
+      "Storage Instructions: write realistic storage guidance. If it is fresh or drink-like, prefer same-day serving. If cooked, include cooling and reheating notes.",
+      "Variations: write 3-4 variations using believable swaps, spice changes, texture changes or lighter/richer versions.",
+      "FAQs: write 6 questions. Include make-ahead, texture fix, substitution, spice control, serving, and beginner difficulty. Answers must mention Blueberries naturally."
+    ]
+  },
+  {
+    "id": "0543d088-2dbc-4a0a-85af-3666b3a9d407",
+    "title": "Apple",
+    "url": "http://localhost:3000/apple",
+    "slug": "apple",
+    "priorityScore": 98,
+    "family": "general",
+    "views": 0,
+    "contentUpdatedAt": "2026-05-30T06:21:40.189Z",
+    "ingredients": [
+      "apple"
+    ],
+    "qualitySignals": {
+      "descriptionWords": 351,
+      "methodWords": 63,
+      "genericDescription": true,
+      "genericMethods": false,
+      "weakMethods": true,
+      "missingImage": false,
+      "missingMeta": true,
+      "noEngagement": true,
+      "ingredientCount": 1,
+      "methodCount": 4
+    },
+    "uniqueAngle": "Position this as a quick practical recipe, but add real cooking cues so it does not read like thin content.",
+    "sectionBriefs": [
+      "Why this recipe works: write 2 short paragraphs explaining the role of apple, the cooking technique (sauteing), and the expected final texture.",
+      "Chef Tips: write 4 tips that mention exact cues for Apple, such as heat level, consistency, timing, aroma, colour or resting.",
+      "Common Mistakes: write 4 mistakes specific to this recipe. Avoid generic lines like \"do not overcook\" unless you explain what overcooking looks like here.",
+      "Serving Suggestions: write 3 practical pairings based on meal type, cuisine, texture contrast and portion size.",
+      "Storage Instructions: write realistic storage guidance. If it is fresh or drink-like, prefer same-day serving. If cooked, include cooling and reheating notes.",
+      "Variations: write 3-4 variations using believable swaps, spice changes, texture changes or lighter/richer versions.",
+      "FAQs: write 6 questions. Include make-ahead, texture fix, substitution, spice control, serving, and beginner difficulty. Answers must mention Apple naturally."
+    ]
+  },
+  {
+    "id": "9984eff1-9c37-469b-aecd-cb0112ef6bfc",
+    "title": "Boiled Egg",
+    "url": "http://localhost:3000/boiled-egg",
+    "slug": "boiled-egg",
+    "priorityScore": 98,
+    "family": "general",
+    "views": 0,
+    "contentUpdatedAt": "2026-05-30T06:21:41.032Z",
+    "ingredients": [
+      "egg"
+    ],
+    "qualitySignals": {
+      "descriptionWords": 383,
+      "methodWords": 10,
+      "genericDescription": true,
+      "genericMethods": false,
+      "weakMethods": true,
+      "missingImage": false,
+      "missingMeta": true,
+      "noEngagement": true,
+      "ingredientCount": 1,
+      "methodCount": 1
+    },
+    "uniqueAngle": "Position this as a quick practical recipe, but add real cooking cues so it does not read like thin content.",
+    "sectionBriefs": [
+      "Why this recipe works: write 2 short paragraphs explaining the role of egg, the cooking technique (boiling), and the expected final texture.",
+      "Chef Tips: write 4 tips that mention exact cues for Boiled Egg, such as heat level, consistency, timing, aroma, colour or resting.",
+      "Common Mistakes: write 4 mistakes specific to this recipe. Avoid generic lines like \"do not overcook\" unless you explain what overcooking looks like here.",
+      "Serving Suggestions: write 3 practical pairings based on meal type, cuisine, texture contrast and portion size.",
+      "Storage Instructions: write realistic storage guidance. If it is fresh or drink-like, prefer same-day serving. If cooked, include cooling and reheating notes.",
+      "Variations: write 3-4 variations using believable swaps, spice changes, texture changes or lighter/richer versions.",
+      "FAQs: write 6 questions. Include make-ahead, texture fix, substitution, spice control, serving, and beginner difficulty. Answers must mention Boiled Egg naturally."
+    ]
+  },
+  {
+    "id": "f3666993-97f0-4f42-bc41-ddea6e65c7b0",
+    "title": "Arugula Tofu Saute with Garlic",
+    "url": "http://localhost:3000/arugula-tofu-saute-with-garlic",
+    "slug": "arugula-tofu-saute-with-garlic",
+    "priorityScore": 91,
+    "family": "general",
+    "views": 0,
+    "contentUpdatedAt": "2026-05-30T06:21:40.321Z",
+    "ingredients": [
+      "arugula (salad wala leafy green)",
+      "soft prepared with calcium sulfate and magnesium chloride nigari tofu"
+    ],
+    "qualitySignals": {
+      "descriptionWords": 101,
+      "methodWords": 43,
+      "genericDescription": false,
+      "genericMethods": false,
+      "weakMethods": true,
+      "missingImage": false,
+      "missingMeta": false,
+      "noEngagement": true,
+      "ingredientCount": 5,
+      "methodCount": 3
+    },
+    "uniqueAngle": "Position this as a quick practical recipe, but add real cooking cues so it does not read like thin content.",
+    "sectionBriefs": [
+      "Why this recipe works: write 2 short paragraphs explaining the role of arugula (salad wala leafy green) and soft prepared with calcium sulfate and magnesium chloride nigari tofu, the cooking technique (sauteing), and the expected final texture.",
+      "Chef Tips: write 4 tips that mention exact cues for Arugula Tofu Saute with Garlic, such as heat level, consistency, timing, aroma, colour or resting.",
+      "Common Mistakes: write 4 mistakes specific to this recipe. Avoid generic lines like \"do not overcook\" unless you explain what overcooking looks like here.",
+      "Serving Suggestions: write 3 practical pairings based on meal type, cuisine, texture contrast and portion size.",
+      "Storage Instructions: write realistic storage guidance. If it is fresh or drink-like, prefer same-day serving. If cooked, include cooling and reheating notes.",
+      "Variations: write 3-4 variations using believable swaps, spice changes, texture changes or lighter/richer versions.",
+      "FAQs: write 6 questions. Include make-ahead, texture fix, substitution, spice control, serving, and beginner difficulty. Answers must mention Arugula Tofu Saute with Garlic naturally."
+    ]
+  },
+  {
+    "id": "7f4d021d-0cf7-4b94-8520-341cde1130aa",
+    "title": "2 Egg White Bhurji (Add Capsicum, Onion, Peas and Mushrooms)",
+    "url": "http://localhost:3000/2-egg-white-bhurji-add-capsicum-onion-peas-and-mushrooms",
+    "slug": "2-egg-white-bhurji-add-capsicum-onion-peas-and-mushrooms",
+    "priorityScore": 86,
+    "family": "general",
+    "views": 0,
+    "contentUpdatedAt": "2026-05-30T06:21:39.919Z",
+    "ingredients": [
+      "egg white (ande ka safed hissa)",
+      "onion",
+      "button mushroom (safed mushroom)",
+      "green chillies",
+      "green capsicum"
+    ],
+    "qualitySignals": {
+      "descriptionWords": 484,
+      "methodWords": 73,
+      "genericDescription": true,
+      "genericMethods": false,
+      "weakMethods": true,
+      "missingImage": false,
+      "missingMeta": false,
+      "noEngagement": true,
+      "ingredientCount": 9,
+      "methodCount": 4
+    },
+    "uniqueAngle": "Position this as a quick practical recipe, but add real cooking cues so it does not read like thin content.",
+    "sectionBriefs": [
+      "Why this recipe works: write 2 short paragraphs explaining the role of egg white (ande ka safed hissa), onion, button mushroom (safed mushroom), and green chillies, the cooking technique (controlled cooking), and the expected final texture.",
+      "Chef Tips: write 4 tips that mention exact cues for 2 Egg White Bhurji (Add Capsicum, Onion, Peas and Mushrooms), such as heat level, consistency, timing, aroma, colour or resting.",
+      "Common Mistakes: write 4 mistakes specific to this recipe. Avoid generic lines like \"do not overcook\" unless you explain what overcooking looks like here.",
+      "Serving Suggestions: write 3 practical pairings based on meal type, cuisine, texture contrast and portion size.",
+      "Storage Instructions: write realistic storage guidance. If it is fresh or drink-like, prefer same-day serving. If cooked, include cooling and reheating notes.",
+      "Variations: write 3-4 variations using believable swaps, spice changes, texture changes or lighter/richer versions.",
+      "FAQs: write 6 questions. Include make-ahead, texture fix, substitution, spice control, serving, and beginner difficulty. Answers must mention 2 Egg White Bhurji (Add Capsicum, Onion, Peas and Mushrooms) naturally."
+    ]
+  },
+  {
+    "id": "a55e8aa1-473a-472e-8a90-8dae1ec4b40a",
+    "title": "2 Egg White Bhurji (Add Chopped Carrot, Onions, Peas)",
+    "url": "http://localhost:3000/2-egg-white-bhurji-add-chopped-carrot-onions-peas",
+    "slug": "2-egg-white-bhurji-add-chopped-carrot-onions-peas",
+    "priorityScore": 86,
+    "family": "general",
+    "views": 0,
+    "contentUpdatedAt": "2026-05-30T06:21:39.923Z",
+    "ingredients": [
+      "egg white (ande ka safed hissa)",
+      "carrot",
+      "peas",
+      "onion",
+      "green chillies"
+    ],
+    "qualitySignals": {
+      "descriptionWords": 475,
+      "methodWords": 68,
+      "genericDescription": true,
+      "genericMethods": false,
+      "weakMethods": true,
+      "missingImage": false,
+      "missingMeta": false,
+      "noEngagement": true,
+      "ingredientCount": 7,
+      "methodCount": 3
+    },
+    "uniqueAngle": "Position this as a quick practical recipe, but add real cooking cues so it does not read like thin content.",
+    "sectionBriefs": [
+      "Why this recipe works: write 2 short paragraphs explaining the role of egg white (ande ka safed hissa), carrot, peas, and onion, the cooking technique (controlled cooking), and the expected final texture.",
+      "Chef Tips: write 4 tips that mention exact cues for 2 Egg White Bhurji (Add Chopped Carrot, Onions, Peas), such as heat level, consistency, timing, aroma, colour or resting.",
+      "Common Mistakes: write 4 mistakes specific to this recipe. Avoid generic lines like \"do not overcook\" unless you explain what overcooking looks like here.",
+      "Serving Suggestions: write 3 practical pairings based on meal type, cuisine, texture contrast and portion size.",
+      "Storage Instructions: write realistic storage guidance. If it is fresh or drink-like, prefer same-day serving. If cooked, include cooling and reheating notes.",
+      "Variations: write 3-4 variations using believable swaps, spice changes, texture changes or lighter/richer versions.",
+      "FAQs: write 6 questions. Include make-ahead, texture fix, substitution, spice control, serving, and beginner difficulty. Answers must mention 2 Egg White Bhurji (Add Chopped Carrot, Onions, Peas) naturally."
+    ]
+  },
+  {
+    "id": "309627b0-3fbf-4ffb-aafd-c1abf404714d",
+    "title": "2 Egg White Omelette (Chopped Carrot, Onions)",
+    "url": "http://localhost:3000/2-egg-white-omelette-chopped-carrot-onions",
+    "slug": "2-egg-white-omelette-chopped-carrot-onions",
+    "priorityScore": 86,
+    "family": "general",
+    "views": 0,
+    "contentUpdatedAt": "2026-05-30T06:21:39.930Z",
+    "ingredients": [
+      "egg white (ande ka safed hissa)",
+      "carrot",
+      "onion"
+    ],
+    "qualitySignals": {
+      "descriptionWords": 480,
+      "methodWords": 84,
+      "genericDescription": true,
+      "genericMethods": false,
+      "weakMethods": true,
+      "missingImage": false,
+      "missingMeta": false,
+      "noEngagement": true,
+      "ingredientCount": 6,
+      "methodCount": 4
+    },
+    "uniqueAngle": "Position this as a quick practical recipe, but add real cooking cues so it does not read like thin content.",
+    "sectionBriefs": [
+      "Why this recipe works: write 2 short paragraphs explaining the role of egg white (ande ka safed hissa), carrot, and onion, the cooking technique (controlled cooking), and the expected final texture.",
+      "Chef Tips: write 4 tips that mention exact cues for 2 Egg White Omelette (Chopped Carrot, Onions), such as heat level, consistency, timing, aroma, colour or resting.",
+      "Common Mistakes: write 4 mistakes specific to this recipe. Avoid generic lines like \"do not overcook\" unless you explain what overcooking looks like here.",
+      "Serving Suggestions: write 3 practical pairings based on meal type, cuisine, texture contrast and portion size.",
+      "Storage Instructions: write realistic storage guidance. If it is fresh or drink-like, prefer same-day serving. If cooked, include cooling and reheating notes.",
+      "Variations: write 3-4 variations using believable swaps, spice changes, texture changes or lighter/richer versions.",
+      "FAQs: write 6 questions. Include make-ahead, texture fix, substitution, spice control, serving, and beginner difficulty. Answers must mention 2 Egg White Omelette (Chopped Carrot, Onions) naturally."
+    ]
+  },
+  {
+    "id": "b2c9098c-8dbe-4f48-bf04-cce4abb598d9",
+    "title": "Aam Panna",
+    "url": "http://localhost:3000/aam-panna",
+    "slug": "aam-panna",
+    "priorityScore": 86,
+    "family": "drink",
+    "views": 0,
+    "contentUpdatedAt": "2026-05-30T06:21:40.005Z",
+    "ingredients": [
+      "green mango",
+      "cardamom powder",
+      "organic jaggery (gud)"
+    ],
+    "qualitySignals": {
+      "descriptionWords": 443,
+      "methodWords": 57,
+      "genericDescription": true,
+      "genericMethods": false,
+      "weakMethods": true,
+      "missingImage": false,
+      "missingMeta": false,
+      "noEngagement": true,
+      "ingredientCount": 4,
+      "methodCount": 6
+    },
+    "uniqueAngle": "Focus on freshness, balance and when to serve Aam Panna; explain how green mango, cardamom powder, and organic jaggery (gud) affect body, aroma and sweetness.",
+    "sectionBriefs": [
+      "Why this recipe works: write 2 short paragraphs explaining the role of green mango, cardamom powder, and organic jaggery (gud), the cooking technique (blending or brewing), and the expected final texture.",
+      "Chef Tips: write 4 tips that mention exact cues for Aam Panna, such as heat level, consistency, timing, aroma, colour or resting.",
+      "Common Mistakes: write 4 mistakes specific to this recipe. Avoid generic lines like \"do not overcook\" unless you explain what overcooking looks like here.",
+      "Serving Suggestions: write 3 practical pairings based on meal type, cuisine, texture contrast and portion size.",
+      "Storage Instructions: write realistic storage guidance. If it is fresh or drink-like, prefer same-day serving. If cooked, include cooling and reheating notes.",
+      "Variations: write 3-4 variations using believable swaps, spice changes, texture changes or lighter/richer versions.",
+      "FAQs: write 6 questions. Include make-ahead, texture fix, substitution, spice control, serving, and beginner difficulty. Answers must mention Aam Panna naturally."
+    ]
+  },
+  {
+    "id": "b5e82148-a919-45ff-b860-f31569336d20",
+    "title": "Ajwain and Onion Stuffed Wheat Bran Chapati (30% Wheat Bran, 70% Wheat Flour)",
+    "url": "http://localhost:3000/ajwain-and-onion-stuffed-wheat-bran-chapati-30-wheat-bran-70-wheat-flour",
+    "slug": "ajwain-and-onion-stuffed-wheat-bran-chapati-30-wheat-bran-70-wheat-flour",
+    "priorityScore": 86,
+    "family": "bread",
+    "views": 0,
+    "contentUpdatedAt": "2026-05-30T06:21:40.033Z",
+    "ingredients": [
+      "whole wheat flour",
+      "wheat bran (gehun ka chokar)",
+      "onion",
+      "carom seeds"
+    ],
+    "qualitySignals": {
+      "descriptionWords": 544,
+      "methodWords": 82,
+      "genericDescription": true,
+      "genericMethods": false,
+      "weakMethods": true,
+      "missingImage": false,
+      "missingMeta": false,
+      "noEngagement": true,
+      "ingredientCount": 4,
+      "methodCount": 4
+    },
+    "uniqueAngle": "Focus on dough or batter feel, pan heat and softness; explain how whole wheat flour, wheat bran (gehun ka chokar), and onion change texture.",
+    "sectionBriefs": [
+      "Why this recipe works: write 2 short paragraphs explaining the role of whole wheat flour, wheat bran (gehun ka chokar), onion, and carom seeds, the cooking technique (controlled cooking), and the expected final texture.",
+      "Chef Tips: write 4 tips that mention exact cues for Ajwain and Onion Stuffed Wheat Bran Chapati (30% Wheat Bran, 70% Wheat Flour), such as heat level, consistency, timing, aroma, colour or resting.",
+      "Common Mistakes: write 4 mistakes specific to this recipe. Avoid generic lines like \"do not overcook\" unless you explain what overcooking looks like here.",
+      "Serving Suggestions: write 3 practical pairings based on meal type, cuisine, texture contrast and portion size.",
+      "Storage Instructions: write realistic storage guidance. If it is fresh or drink-like, prefer same-day serving. If cooked, include cooling and reheating notes.",
+      "Variations: write 3-4 variations using believable swaps, spice changes, texture changes or lighter/richer versions.",
+      "FAQs: write 6 questions. Include make-ahead, texture fix, substitution, spice control, serving, and beginner difficulty. Answers must mention Ajwain and Onion Stuffed Wheat Bran Chapati (30% Wheat Bran, 70% Wheat Flour) naturally."
+    ]
+  },
+  {
+    "id": "b072ae04-76cf-4386-8230-2541ba20d894",
+    "title": "Ajwain Roti (50% Oat Bran, 50% Oat Meal)",
+    "url": "http://localhost:3000/ajwain-roti-50-oat-bran-50-oat-meal",
+    "slug": "ajwain-roti-50-oat-bran-50-oat-meal",
+    "priorityScore": 86,
+    "family": "bread",
+    "views": 0,
+    "contentUpdatedAt": "2026-05-30T06:21:40.038Z",
+    "ingredients": [
+      "oatmeal flour",
+      "oat bran (oats ka chilka)",
+      "carom seeds"
+    ],
+    "qualitySignals": {
+      "descriptionWords": 507,
+      "methodWords": 70,
+      "genericDescription": true,
+      "genericMethods": false,
+      "weakMethods": true,
+      "missingImage": false,
+      "missingMeta": false,
+      "noEngagement": true,
+      "ingredientCount": 3,
+      "methodCount": 4
+    },
+    "uniqueAngle": "Focus on dough or batter feel, pan heat and softness; explain how oatmeal flour, oat bran (oats ka chilka), and carom seeds change texture.",
+    "sectionBriefs": [
+      "Why this recipe works: write 2 short paragraphs explaining the role of oatmeal flour, oat bran (oats ka chilka), and carom seeds, the cooking technique (controlled cooking), and the expected final texture.",
+      "Chef Tips: write 4 tips that mention exact cues for Ajwain Roti (50% Oat Bran, 50% Oat Meal), such as heat level, consistency, timing, aroma, colour or resting.",
+      "Common Mistakes: write 4 mistakes specific to this recipe. Avoid generic lines like \"do not overcook\" unless you explain what overcooking looks like here.",
+      "Serving Suggestions: write 3 practical pairings based on meal type, cuisine, texture contrast and portion size.",
+      "Storage Instructions: write realistic storage guidance. If it is fresh or drink-like, prefer same-day serving. If cooked, include cooling and reheating notes.",
+      "Variations: write 3-4 variations using believable swaps, spice changes, texture changes or lighter/richer versions.",
+      "FAQs: write 6 questions. Include make-ahead, texture fix, substitution, spice control, serving, and beginner difficulty. Answers must mention Ajwain Roti (50% Oat Bran, 50% Oat Meal) naturally."
+    ]
+  },
+  {
+    "id": "4558a92d-fcfe-4809-bb4c-35348bdf5d3f",
+    "title": "Ajwain Stuffed Oat Bran Chapati (30% Oat Bran, 70% Oat Meal)",
+    "url": "http://localhost:3000/ajwain-stuffed-oat-bran-chapati-30-oat-bran-70-oat-meal",
+    "slug": "ajwain-stuffed-oat-bran-chapati-30-oat-bran-70-oat-meal",
+    "priorityScore": 86,
+    "family": "bread",
+    "views": 0,
+    "contentUpdatedAt": "2026-05-30T06:21:40.042Z",
+    "ingredients": [
+      "oatmeal flour",
+      "oat bran (oats ka chilka)",
+      "carom seeds"
+    ],
+    "qualitySignals": {
+      "descriptionWords": 501,
+      "methodWords": 67,
+      "genericDescription": true,
+      "genericMethods": false,
+      "weakMethods": true,
+      "missingImage": false,
+      "missingMeta": false,
+      "noEngagement": true,
+      "ingredientCount": 3,
+      "methodCount": 5
+    },
+    "uniqueAngle": "Focus on dough or batter feel, pan heat and softness; explain how oatmeal flour, oat bran (oats ka chilka), and carom seeds change texture.",
+    "sectionBriefs": [
+      "Why this recipe works: write 2 short paragraphs explaining the role of oatmeal flour, oat bran (oats ka chilka), and carom seeds, the cooking technique (controlled cooking), and the expected final texture.",
+      "Chef Tips: write 4 tips that mention exact cues for Ajwain Stuffed Oat Bran Chapati (30% Oat Bran, 70% Oat Meal), such as heat level, consistency, timing, aroma, colour or resting.",
+      "Common Mistakes: write 4 mistakes specific to this recipe. Avoid generic lines like \"do not overcook\" unless you explain what overcooking looks like here.",
+      "Serving Suggestions: write 3 practical pairings based on meal type, cuisine, texture contrast and portion size.",
+      "Storage Instructions: write realistic storage guidance. If it is fresh or drink-like, prefer same-day serving. If cooked, include cooling and reheating notes.",
+      "Variations: write 3-4 variations using believable swaps, spice changes, texture changes or lighter/richer versions.",
+      "FAQs: write 6 questions. Include make-ahead, texture fix, substitution, spice control, serving, and beginner difficulty. Answers must mention Ajwain Stuffed Oat Bran Chapati (30% Oat Bran, 70% Oat Meal) naturally."
+    ]
+  },
+  {
+    "id": "b885f92d-b98d-4f49-ac6a-a45255ed1339",
+    "title": "Amish Chicken Broccoli Salad",
+    "url": "http://localhost:3000/amish-chicken-broccoli-salad",
+    "slug": "amish-chicken-broccoli-salad",
+    "priorityScore": 86,
+    "family": "fresh",
+    "views": 0,
+    "contentUpdatedAt": "2026-05-30T06:21:40.168Z",
+    "ingredients": [
+      "broccoli",
+      "sour curd (khatta dahi)",
+      "red cabbage",
+      "chicken breast",
+      "onion"
+    ],
+    "qualitySignals": {
+      "descriptionWords": 451,
+      "methodWords": 71,
+      "genericDescription": true,
+      "genericMethods": false,
+      "weakMethods": true,
+      "missingImage": false,
+      "missingMeta": false,
+      "noEngagement": true,
+      "ingredientCount": 8,
+      "methodCount": 3
+    },
+    "uniqueAngle": "Focus on clean preparation, freshness and texture; make this useful beyond a simple ingredient list.",
+    "sectionBriefs": [
+      "Why this recipe works: write 2 short paragraphs explaining the role of broccoli, sour curd (khatta dahi), red cabbage, and chicken breast, the cooking technique (boiling), and the expected final texture.",
+      "Chef Tips: write 4 tips that mention exact cues for Amish Chicken Broccoli Salad, such as heat level, consistency, timing, aroma, colour or resting.",
+      "Common Mistakes: write 4 mistakes specific to this recipe. Avoid generic lines like \"do not overcook\" unless you explain what overcooking looks like here.",
+      "Serving Suggestions: write 3 practical pairings based on meal type, cuisine, texture contrast and portion size.",
+      "Storage Instructions: write realistic storage guidance. If it is fresh or drink-like, prefer same-day serving. If cooked, include cooling and reheating notes.",
+      "Variations: write 3-4 variations using believable swaps, spice changes, texture changes or lighter/richer versions.",
+      "FAQs: write 6 questions. Include make-ahead, texture fix, substitution, spice control, serving, and beginner difficulty. Answers must mention Amish Chicken Broccoli Salad naturally."
+    ]
+  },
+  {
+    "id": "ad96024a-cec1-404a-b7cf-50304d3c975f",
+    "title": "Bengal Fish Curry",
+    "url": "http://localhost:3000/bengal-fish-curry",
+    "slug": "bengal-fish-curry",
+    "priorityScore": 86,
+    "family": "main",
+    "views": 0,
+    "contentUpdatedAt": "2026-05-30T06:21:40.819Z",
+    "ingredients": [
+      "tuna",
+      "coriander powder",
+      "onion",
+      "cloves",
+      "tomato"
+    ],
+    "qualitySignals": {
+      "descriptionWords": 453,
+      "methodWords": 111,
+      "genericDescription": true,
+      "genericMethods": false,
+      "weakMethods": true,
+      "missingImage": false,
+      "missingMeta": false,
+      "noEngagement": true,
+      "ingredientCount": 15,
+      "methodCount": 6
+    },
+    "uniqueAngle": "Focus on masala timing, tenderness and serving plate fit; connect tuna, coriander powder, and onion with the South Indian Pescetarian context.",
+    "sectionBriefs": [
+      "Why this recipe works: write 2 short paragraphs explaining the role of tuna, coriander powder, onion, and cloves, the cooking technique (shallow frying), and the expected final texture.",
+      "Chef Tips: write 4 tips that mention exact cues for Bengal Fish Curry, such as heat level, consistency, timing, aroma, colour or resting.",
+      "Common Mistakes: write 4 mistakes specific to this recipe. Avoid generic lines like \"do not overcook\" unless you explain what overcooking looks like here.",
+      "Serving Suggestions: write 3 practical pairings based on meal type, cuisine, texture contrast and portion size.",
+      "Storage Instructions: write realistic storage guidance. If it is fresh or drink-like, prefer same-day serving. If cooked, include cooling and reheating notes.",
+      "Variations: write 3-4 variations using believable swaps, spice changes, texture changes or lighter/richer versions.",
+      "FAQs: write 6 questions. Include make-ahead, texture fix, substitution, spice control, serving, and beginner difficulty. Answers must mention Bengal Fish Curry naturally."
+    ]
+  },
+  {
+    "id": "964d6398-86ed-40fa-88d4-f7272021a4e7",
+    "title": "Air Fryer Chicken Kabab",
+    "url": "http://localhost:3000/air-fryer-chicken-kabab",
+    "slug": "air-fryer-chicken-kabab",
+    "priorityScore": 61,
+    "family": "snack",
+    "views": 0,
+    "contentUpdatedAt": "2026-05-30T06:21:40.015Z",
+    "ingredients": [
+      "chicken breast",
+      "egg",
+      "breadcrumbs (bread ka chura)",
+      "dried parsley (sukhi parsley herb)"
+    ],
+    "qualitySignals": {
+      "descriptionWords": 467,
+      "methodWords": 109,
+      "genericDescription": true,
+      "genericMethods": false,
+      "weakMethods": false,
+      "missingImage": false,
+      "missingMeta": false,
+      "noEngagement": true,
+      "ingredientCount": 5,
+      "methodCount": 4
+    },
+    "uniqueAngle": "Focus on shape, crispness or softness, and how to avoid greasy or dry results.",
+    "sectionBriefs": [
+      "Why this recipe works: write 2 short paragraphs explaining the role of chicken breast, egg, breadcrumbs (bread ka chura), and dried parsley (sukhi parsley herb), the cooking technique (baking), and the expected final texture.",
+      "Chef Tips: write 4 tips that mention exact cues for Air Fryer Chicken Kabab, such as heat level, consistency, timing, aroma, colour or resting.",
+      "Common Mistakes: write 4 mistakes specific to this recipe. Avoid generic lines like \"do not overcook\" unless you explain what overcooking looks like here.",
+      "Serving Suggestions: write 3 practical pairings based on meal type, cuisine, texture contrast and portion size.",
+      "Storage Instructions: write realistic storage guidance. If it is fresh or drink-like, prefer same-day serving. If cooked, include cooling and reheating notes.",
+      "Variations: write 3-4 variations using believable swaps, spice changes, texture changes or lighter/richer versions.",
+      "FAQs: write 6 questions. Include make-ahead, texture fix, substitution, spice control, serving, and beginner difficulty. Answers must mention Air Fryer Chicken Kabab naturally."
+    ]
+  }
+]

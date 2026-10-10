@@ -1,0 +1,49 @@
+{
+  "id": "/",
+  "name": "Kya Khayen - Recipes & Meal Plans",
+  "short_name": "Kya Khayen",
+  "description": "Discover nourishing recipes, save favourites and follow personalised meal plans.",
+  "lang": "en-IN",
+  "start_url": "/app?source=pwa",
+  "scope": "/",
+  "display": "standalone",
+  "display_override": ["window-controls-overlay", "standalone"],
+  "orientation": "portrait-primary",
+  "background_color": "#10231c",
+  "theme_color": "#10231c",
+  "categories": ["food", "health", "lifestyle"],
+  "icons": [
+    {
+      "src": "/pwa/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/pwa/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/pwa/icon-maskable-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Browse recipes",
+      "short_name": "Recipes",
+      "url": "/recipes?source=pwa-shortcut",
+      "icons": [{ "src": "/pwa/icon-192.png", "sizes": "192x192" }]
+    },
+    {
+      "name": "My meal plan",
+      "short_name": "Meal Plan",
+      "url": "/user/dashboard?source=pwa-shortcut",
+      "icons": [{ "src": "/pwa/icon-192.png", "sizes": "192x192" }]
+    }
+  ]
+}

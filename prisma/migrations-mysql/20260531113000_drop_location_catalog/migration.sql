@@ -1,0 +1,9 @@
+DROP TABLE IF EXISTS `City`;
+DROP TABLE IF EXISTS `State`;
+DROP TABLE IF EXISTS `Country`;
+DROP TABLE IF EXISTS `UserAddress`;
+
+ALTER TABLE `ContactUsQueries`
+  DROP COLUMN `country`,
+  DROP COLUMN `state`,
+  DROP COLUMN `city`;

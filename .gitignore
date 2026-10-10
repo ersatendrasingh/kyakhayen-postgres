@@ -1,0 +1,50 @@
+# See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
+
+# dependencies
+/node_modules
+/.pnp
+.pnp.js
+.yarn/install-state.gz
+/config
+
+# testing
+/coverage
+
+# next.js
+/.next/
+/out/
+
+#VSCODE
+/.vscode/
+
+# production
+/build
+.backups/
+.postgres-data/
+.postgres-socket/
+postgres.log
+
+# misc
+.DS_Store
+*.pem
+
+# debug
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# local env files
+.env*.local
+.env
+scripts/*.load
+.local-migration.load
+
+# vercel
+.vercel
+
+# typescript
+*.tsbuildinfo
+
+public/sw.js
+public/swe-worker*.js
+public/workbox*.js

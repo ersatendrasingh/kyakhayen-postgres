@@ -1,0 +1,12 @@
+LOAD DATABASE
+     FROM mysql://MYSQL_USER:MYSQL_PASSWORD@MYSQL_HOST:3306/MYSQL_DATABASE
+     INTO postgresql://POSTGRES_USER:POSTGRES_PASSWORD@POSTGRES_HOST:5432/POSTGRES_DATABASE?sslmode=require
+
+ WITH quote identifiers,
+      create tables,
+      create indexes,
+      reset sequences,
+      foreign keys
+
+ SET work_mem to '16MB',
+     maintenance_work_mem to '128MB';

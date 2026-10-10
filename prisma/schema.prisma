@@ -1,0 +1,1236 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+model Recipes {
+  id                   String                       @id @default(uuid())
+  title                String                       @db.Text
+  metaTitle            String?                      @db.Text
+  metaDescription      String?                      @db.Text
+  metaSlug             String?                      @db.Text
+  slug                 String                       @unique
+  description          String?                      @db.Text
+  imageUrl             String?
+  RecipeCategories     RecipeCategories?            @relation(fields: [recipeCategoriesId], references: [id])
+  recipeCategoriesId   String?
+  recipeDifficultyId   String?
+  recipeSeasonsId      String?
+  seasonality          RecipeSeasonality            @default(UNREVIEWED)
+  views                Int                          @default(0)
+  recipeDifficulty     RecipeDifficulty?            @relation(fields: [recipeDifficultyId], references: [id])
+  recipeDifficulties   RecipeDifficultyAssignment[]
+  recipeIngredients    RecipeIngredients[]
+  recipeMethods        RecipeMethods[]
+  recipeSeasons        RecipeSeasons?               @relation(fields: [recipeSeasonsId], references: [id])
+  recipeSeasonTags     RecipeSeasonAssignment[]
+  recipeCookingTime    RecipeCookingTime?
+  recipeCookingMethods RecipeCookingMethod[]
+  recipeBodyTypes      RecipeBodyType[]
+  recipeCuisine        RecipeCuisines[]
+  recipeAllergies      RecipeAllergies[]
+  recipeMealTime       recipeMealTime[]
+  recipeNutrient       recipeNutrient[]
+  recipeDietType       recipeDietType[]
+  recipeRecipeType     recipeRecipeType[]
+  recipeComments       Comment[]
+  Review               Review[]
+  RecipeViews          RecipeViews[]
+  UserRecipeViews      UserRecipeViews[]
+  Favorite             Favorite[]
+  RecipeReaction       RecipeReaction[]
+
+  isPublished      Boolean   @default(false)
+  publishedAt      DateTime?
+  contentUpdatedAt DateTime?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([isPublished, publishedAt])
+  @@index([contentUpdatedAt])
+}
+
+enum RecipeSeasonality {
+  UNREVIEWED
+  ALL_YEAR
+  SEASONAL
+}
+
+model MediaAsset {
+  id              String   @id @default(uuid())
+  name            String
+  url             String   @unique
+  storageKey      String   @unique
+  storageProvider String   @default("S3") @db.VarChar(32)
+  mimeType        String
+  mediaType       String
+  fileSize        BigInt
+  altText         String?
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  @@index([mediaType, createdAt])
+  @@index([storageProvider, createdAt])
+}
+
+model SiteMediaSetting {
+  id                            String   @id @default("media") @db.VarChar(32)
+  primaryProvider               String   @default("CLOUDINARY") @db.VarChar(32)
+  cloudinaryCloudName           String?  @db.VarChar(255)
+  cloudinaryApiKey              String?  @db.VarChar(255)
+  cloudinaryApiSecretCiphertext String?  @db.Text
+  createdAt                     DateTime @default(now())
+  updatedAt                     DateTime @updatedAt
+}
+
+model RecipeViews {
+  id        String  @id @default(uuid())
+  ipAddress String
+  recipeId  String
+  recipe    Recipes @relation(fields: [recipeId], references: [id], onDelete: Cascade)
+
+  @@unique([recipeId, ipAddress])
+}
+
+model UserRecipeViews {
+  id        String   @id @default(uuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  recipeId  String
+  recipe    Recipes  @relation(fields: [recipeId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([userId, recipeId])
+}
+
+model RecipeCategories {
+  id          String    @id @default(uuid())
+  name        String    @unique
+  slug        String    @unique
+  imageUrl    String?
+  position    Int?
+  isPublished Boolean   @default(false)
+  recipe      Recipes[]
+  User        User[]
+}
+
+model Units {
+  id                         String                       @id @default(uuid())
+  title                      String                       @unique
+  shortName                  String                       @unique
+  position                   Int?
+  RecipeIngredients          RecipeIngredients[]
+  IngredientUnitMeasurements IngredientUnitMeasurements[]
+}
+
+model RecipeIngredients {
+  id             String          @id @default(uuid())
+  ingredientId   String
+  ingredient     Ingredients     @relation(fields: [ingredientId], references: [id])
+  quantity       Float
+  formId         String
+  ingredientForm IngredientsForm @relation(fields: [formId], references: [id])
+  unitId         String
+  position       Int
+  unit           Units           @relation(fields: [unitId], references: [id])
+  recipeId       String
+  recipe         Recipes         @relation(fields: [recipeId], references: [id], onDelete: Cascade)
+}
+
+model RecipeMethods {
+  id          String  @id @default(uuid())
+  title       String  @db.Text
+  description String? @db.Text
+  imageUrl    String?
+  videoUrl    String?
+  position    Int
+  notes       String? @db.Text
+  recipeId    String
+  recipe      Recipes @relation(fields: [recipeId], references: [id], onDelete: Cascade)
+  isPublished Boolean @default(false)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model RecipeDifficulty {
+  id          String                       @id @default(uuid())
+  title       String
+  imageUrl    String?
+  position    Int?
+  Recipes     Recipes[]
+  assignments RecipeDifficultyAssignment[]
+  User        User[]
+}
+
+model RecipeSeasons {
+  id          String                   @id @default(uuid())
+  title       String
+  Recipes     Recipes[]
+  assignments RecipeSeasonAssignment[]
+}
+
+model RecipeDifficultyAssignment {
+  id                 String           @id @default(uuid())
+  recipeId           String
+  recipeDifficultyId String
+  recipe             Recipes          @relation(fields: [recipeId], references: [id], onDelete: Cascade)
+  difficulty         RecipeDifficulty @relation(fields: [recipeDifficultyId], references: [id], onDelete: Cascade)
+
+  @@unique([recipeId, recipeDifficultyId])
+}
+
+model RecipeSeasonAssignment {
+  id              String        @id @default(uuid())
+  recipeId        String
+  recipeSeasonsId String
+  recipe          Recipes       @relation(fields: [recipeId], references: [id], onDelete: Cascade)
+  season          RecipeSeasons @relation(fields: [recipeSeasonsId], references: [id], onDelete: Cascade)
+
+  @@unique([recipeId, recipeSeasonsId])
+}
+
+model RecipeCookingTime {
+  id        String  @id @default(uuid())
+  prepTime  Int
+  cookTime  Int
+  restTime  Int
+  totalTime Int     @default(0)
+  recipe    Recipes @relation(fields: [recipeId], references: [id], onDelete: Cascade)
+  recipeId  String
+
+  @@unique([recipeId])
+  @@index([totalTime])
+}
+
+model CookingMethods {
+  id                  String                @id @default(uuid())
+  title               String
+  slug                String                @unique
+  imageUrl            String?
+  position            Int?
+  isPublished         Boolean               @default(false)
+  recipeCookingMethod RecipeCookingMethod[]
+}
+
+model RecipeCookingMethod {
+  id              String @id @default(uuid())
+  recipeId        String
+  cookingMethodId String
+
+  recipe        Recipes        @relation(fields: [recipeId], references: [id], onDelete: Cascade)
+  cookingMethod CookingMethods @relation(fields: [cookingMethodId], references: [id], onDelete: Cascade)
+}
+
+model BodyTypes {
+  id              String           @id @default(uuid())
+  title           String
+  slug            String           @unique
+  imageUrl        String?
+  position        Int?
+  isPublished     Boolean          @default(false)
+  recipeBodyTypes RecipeBodyType[]
+}
+
+model RecipeBodyType {
+  id         String @id @default(uuid())
+  recipeId   String
+  bodyTypeId String
+
+  recipe   Recipes   @relation(fields: [recipeId], references: [id], onDelete: Cascade)
+  bodyType BodyTypes @relation(fields: [bodyTypeId], references: [id], onDelete: Cascade)
+
+  @@unique([recipeId, bodyTypeId])
+}
+
+model Cuisines {
+  id            String           @id @default(uuid())
+  title         String
+  slug          String           @unique
+  imageUrl      String?
+  position      Int?
+  isPublished   Boolean          @default(false)
+  recipeCuisine RecipeCuisines[]
+  userCuisines  UserCuisines[]
+}
+
+model RecipeCuisines {
+  id        String @id @default(uuid())
+  recipeId  String
+  cuisineId String
+
+  recipe  Recipes  @relation(fields: [recipeId], references: [id], onDelete: Cascade)
+  cuisine Cuisines @relation(fields: [cuisineId], references: [id], onDelete: Cascade)
+}
+
+model Allergies {
+  id              String            @id @default(uuid())
+  title           String
+  slug            String            @unique
+  imageUrl        String?
+  position        Int?
+  isPublished     Boolean           @default(false)
+  recipeAllergies RecipeAllergies[]
+  UserAllrgies    UserAllrgies[]
+}
+
+model RecipeAllergies {
+  id        String @id @default(uuid())
+  recipeId  String
+  allergyId String
+
+  recipe    Recipes   @relation(fields: [recipeId], references: [id], onDelete: Cascade)
+  allergies Allergies @relation(fields: [allergyId], references: [id], onDelete: Cascade)
+}
+
+model MealTimes {
+  id             String           @id @default(uuid())
+  title          String
+  slug           String           @unique
+  imageUrl       String?
+  position       Int?
+  isPublished    Boolean          @default(false)
+  recipeMealTime recipeMealTime[]
+}
+
+model recipeMealTime {
+  id         String    @id @default(uuid())
+  recipeId   String
+  mealTimeId String
+  recipe     Recipes   @relation(fields: [recipeId], references: [id], onDelete: Cascade)
+  mealTime   MealTimes @relation(fields: [mealTimeId], references: [id], onDelete: Cascade)
+}
+
+model Nutrient {
+  id             String           @id @default(uuid())
+  title          String
+  slug           String           @unique
+  imageUrl       String?
+  position       Int?
+  isPublished    Boolean          @default(false)
+  recipeNutrient recipeNutrient[]
+}
+
+model recipeNutrient {
+  id         String   @id @default(uuid())
+  recipeId   String
+  nutrientId String
+  recipe     Recipes  @relation(fields: [recipeId], references: [id], onDelete: Cascade)
+  nutrient   Nutrient @relation(fields: [nutrientId], references: [id], onDelete: Cascade)
+}
+
+model DietTypes {
+  id             String           @id @default(uuid())
+  title          String
+  slug           String           @unique
+  imageUrl       String?
+  position       Int?
+  isPublished    Boolean          @default(false)
+  recipeDietType recipeDietType[]
+}
+
+model recipeDietType {
+  id         String    @id @default(uuid())
+  recipeId   String
+  dietTypeId String
+  recipe     Recipes   @relation(fields: [recipeId], references: [id], onDelete: Cascade)
+  dietType   DietTypes @relation(fields: [dietTypeId], references: [id], onDelete: Cascade)
+}
+
+model RecipeTypes {
+  id               String             @id @default(uuid())
+  title            String
+  slug             String             @unique
+  imageUrl         String?
+  position         Int?
+  isPublished      Boolean            @default(false)
+  recipeRecipeType recipeRecipeType[]
+}
+
+model recipeRecipeType {
+  id           String      @id @default(uuid())
+  recipeId     String
+  recipeTypeId String
+  recipe       Recipes     @relation(fields: [recipeId], references: [id], onDelete: Cascade)
+  recipeType   RecipeTypes @relation(fields: [recipeTypeId], references: [id], onDelete: Cascade)
+}
+
+model Ingredients {
+  id                    String    @id @default(uuid())
+  name                  String
+  slug                  String?   @unique
+  imageUrl              String?
+  nutritionSource       String?
+  nutritionBasisGrams   Float     @default(100)
+  calories              Float?
+  carbohydrate          Float?
+  totalFat              Float?
+  dietaryFiber          Float?
+  protein               Float?
+  vitaminA              Float?
+  ascorbicAcids         Float?
+  vitaminD              Float?
+  tocopherolEquivalent  Float?
+  vitaminK              Float?
+  thiamine              Float?
+  riboflavin            Float?
+  totalB6               Float?
+  folates               Float?
+  calcium               Float?
+  iron                  Float?
+  phosphorus            Float?
+  potassium             Float?
+  sodium                Float?
+  zinc                  Float?
+  marketPriceInr        Float?
+  marketPriceBasisGrams Float     @default(100)
+  marketPriceSource     String?
+  marketPriceUpdatedAt  DateTime?
+
+  IngredientCategories   IngredientCategories? @relation(fields: [ingredientCategoriesId], references: [id])
+  ingredientCategoriesId String?
+  RecipeIngredients      RecipeIngredients[]
+
+  isPublished Boolean @default(false)
+
+  createdAt                  DateTime                     @default(now())
+  updatedAt                  DateTime                     @updatedAt
+  IngredientUnitMeasurements IngredientUnitMeasurements[]
+
+  @@index([marketPriceInr])
+}
+
+model IngredientUnitMeasurements {
+  id           String      @id @default(uuid())
+  ingredientId String
+  unitId       String
+  unit         Units       @relation(fields: [unitId], references: [id])
+  ingredient   Ingredients @relation(fields: [ingredientId], references: [id])
+  values       Float
+
+  @@unique([ingredientId, unitId])
+}
+
+model IngredientCategories {
+  id          String        @id @default(uuid())
+  name        String        @unique
+  slug        String        @unique
+  imageUrl    String?
+  position    Int?
+  isPublished Boolean       @default(false)
+  ingredient  Ingredients[]
+}
+
+model IngredientsForm {
+  id                String              @id @default(uuid())
+  name              String              @unique
+  position          Int?
+  RecipeIngredients RecipeIngredients[]
+}
+
+model Plan {
+  id              String         @id @default(uuid())
+  name            String
+  slug            String         @unique
+  durationDays    Int?
+  regularPriceInr Float?
+  regularPriceUsd Float?
+  priceInr        Float?
+  priceUsd        Float?
+  features        Feature[]
+  UserPlan        UserPlan[]
+  Item            Item[]
+  PlanOnCoupon    PlanOnCoupon[]
+  isPublished     Boolean        @default(false)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Feature {
+  id       String @id @default(uuid())
+  name     String
+  planId   String
+  position Int
+  plans    Plan   @relation(fields: [planId], references: [id], onDelete: Cascade)
+}
+
+enum UserRole {
+  ADMIN
+  USER
+}
+
+model User {
+  id                     String                 @id @default(cuid())
+  name                   String?
+  email                  String?                @unique
+  phoneNumber            String?                @unique
+  emailVerified          DateTime?
+  image                  String?
+  password               String?
+  bio                    String?                @db.Text
+  role                   UserRole               @default(USER)
+  accounts               Account[]
+  genderId               String?
+  gender                 Gender?                @relation(fields: [genderId], references: [id])
+  foodPreferenceId       String?
+  foodPreference         RecipeCategories?      @relation(fields: [foodPreferenceId], references: [id])
+  cookingSkillId         String?
+  cookingSkill           RecipeDifficulty?      @relation(fields: [cookingSkillId], references: [id])
+  userCuisines           UserCuisines[]
+  UserAllrgies           UserAllrgies[]
+  Post                   Post[]
+  Comment                Comment[]
+  UserPlan               UserPlan[]
+  UserMealPlan           UserMealPlan[]
+  isTwoFactorEnabled     Boolean                @default(false)
+  isPersonalised         Boolean                @default(false)
+  isActive               Boolean                @default(true)
+  suspendedAt            DateTime?
+  suspensionReason       String?                @db.Text
+  twoFactorConfirmation  TwoFactorConfirmation?
+  CommentLikes           CommentLikes[]
+  Review                 Review[]
+  Favorite               Favorite[]
+  RecipeReaction         RecipeReaction[]
+  UserRecipeViews        UserRecipeViews[]
+  Order                  Order[]
+  UserCoupon             UserCoupon[]
+  PushSubscription       PushSubscription[]
+  pwaDevices             PwaDevice[]
+  pwaInstallEvents       PwaInstallEvent[]
+  targetedCampaigns      NotificationCampaign[] @relation("NotificationTargetUser")
+  notificationDeliveries NotificationDelivery[]
+
+  createdAt DateTime @default(now())
+  updateAt  DateTime @updatedAt
+}
+
+model PushSubscription {
+  id                     String                 @id @default(cuid())
+  userId                 String?
+  user                   User?                  @relation(fields: [userId], references: [id], onDelete: SetNull)
+  deviceId               String?
+  device                 PwaDevice?             @relation(fields: [deviceId], references: [id], onDelete: SetNull)
+  endpoint               String                 @unique @db.VarChar(512)
+  p256dh                 String                 @db.Text
+  auth                   String                 @db.Text
+  userAgent              String?                @db.Text
+  platform               PwaPlatform            @default(UNKNOWN)
+  os                     String?                @db.VarChar(120)
+  browser                String?                @db.VarChar(120)
+  displayMode            String?                @db.VarChar(60)
+  notificationPermission String?                @db.VarChar(40)
+  isActive               Boolean                @default(true)
+  lastSentAt             DateTime?
+  lastSeenAt             DateTime?
+  failureReason          String?                @db.Text
+  deliveries             NotificationDelivery[]
+  createdAt              DateTime               @default(now())
+  updatedAt              DateTime               @updatedAt
+
+  @@index([userId, isActive])
+  @@index([deviceId])
+  @@index([platform, isActive])
+}
+
+enum PwaPlatform {
+  ANDROID
+  IOS
+  DESKTOP
+  UNKNOWN
+}
+
+enum PwaInstallState {
+  BROWSING
+  PROMPTED
+  INSTALLED
+  INFERRED
+}
+
+enum PwaInstallEventType {
+  VISITED
+  PROMPT_SHOWN
+  PROMPT_ACCEPTED
+  PROMPT_DISMISSED
+  APP_INSTALLED
+  STANDALONE_OPENED
+  PUSH_PERMISSION_GRANTED
+  PUSH_PERMISSION_DENIED
+  PUSH_PERMISSION_BLOCKED
+  PUSH_SUBSCRIBED
+  PUSH_UNSUBSCRIBED
+}
+
+model PwaDevice {
+  id                    String             @id @default(cuid())
+  deviceKey             String             @unique @db.VarChar(80)
+  userId                String?
+  user                  User?              @relation(fields: [userId], references: [id], onDelete: SetNull)
+  platform              PwaPlatform        @default(UNKNOWN)
+  os                    String?            @db.VarChar(120)
+  browser               String?            @db.VarChar(120)
+  displayMode           String?            @db.VarChar(60)
+  userAgent             String?            @db.Text
+  installState          PwaInstallState    @default(BROWSING)
+  pushPermission        String?            @db.VarChar(40)
+  promptShownAt         DateTime?
+  promptAcceptedAt      DateTime?
+  installedAt           DateTime?
+  standaloneFirstSeenAt DateTime?
+  pushSubscribedAt      DateTime?
+  pushUnsubscribedAt    DateTime?
+  lastSeenAt            DateTime           @default(now())
+  events                PwaInstallEvent[]
+  pushSubscriptions     PushSubscription[]
+  createdAt             DateTime           @default(now())
+  updatedAt             DateTime           @updatedAt
+
+  @@index([platform, installState])
+  @@index([userId])
+  @@index([installedAt])
+  @@index([lastSeenAt])
+}
+
+model PwaInstallEvent {
+  id          String              @id @default(cuid())
+  deviceId    String
+  device      PwaDevice           @relation(fields: [deviceId], references: [id], onDelete: Cascade)
+  userId      String?
+  user        User?               @relation(fields: [userId], references: [id], onDelete: SetNull)
+  eventType   PwaInstallEventType
+  platform    PwaPlatform         @default(UNKNOWN)
+  os          String?             @db.VarChar(120)
+  browser     String?             @db.VarChar(120)
+  displayMode String?             @db.VarChar(60)
+  userAgent   String?             @db.Text
+  metadata    Json?
+  createdAt   DateTime            @default(now())
+
+  @@index([deviceId, createdAt])
+  @@index([eventType, createdAt])
+  @@index([platform, createdAt])
+  @@index([userId, createdAt])
+}
+
+enum NotificationAudience {
+  ALL_SUBSCRIBERS
+  USER
+  PREFERENCE_SEGMENT
+}
+
+enum NotificationCampaignStatus {
+  SCHEDULED
+  PROCESSING
+  SENT
+  FAILED
+}
+
+enum NotificationSource {
+  ADMIN_BROADCAST
+  ADMIN_TARGETED
+  MEAL_PLAN_READY
+  MEAL_REMINDER
+  MEMBERSHIP_EXPIRY
+  PAYMENT_SUCCESS
+  PAYMENT_FAILED
+  PREFERENCE_PROMOTION
+  TRAFFIC_RECIPE
+}
+
+enum NotificationAutomationTrigger {
+  MEAL_PLAN_READY
+  MEAL_REMINDER
+  MEMBERSHIP_EXPIRY
+  PAYMENT_SUCCESS
+  PAYMENT_FAILED
+  RECIPE_PUBLISHED
+  TRAFFIC_RECIPE
+}
+
+enum NotificationDeliveryStatus {
+  QUEUED
+  DELIVERED
+  FAILED
+  EXPIRED
+}
+
+model NotificationCampaign {
+  id                   String                      @id @default(cuid())
+  title                String
+  body                 String                      @db.Text
+  url                  String?
+  imageUrl             String?
+  audience             NotificationAudience        @default(ALL_SUBSCRIBERS)
+  source               NotificationSource          @default(ADMIN_BROADCAST)
+  status               NotificationCampaignStatus  @default(PROCESSING)
+  segmentType          String?
+  segmentId            String?
+  dedupeKey            String?                     @unique
+  targetUserId         String?
+  targetUser           User?                       @relation("NotificationTargetUser", fields: [targetUserId], references: [id], onDelete: SetNull)
+  createdById          String?
+  createdByName        String?
+  totalRecipients      Int                         @default(0)
+  successfulDeliveries Int                         @default(0)
+  failedDeliveries     Int                         @default(0)
+  expiredSubscriptions Int                         @default(0)
+  openedCount          Int                         @default(0)
+  clickedCount         Int                         @default(0)
+  scheduledAt          DateTime?
+  sentAt               DateTime?
+  automationRuleId     String?
+  automationRule       NotificationAutomationRule? @relation(fields: [automationRuleId], references: [id], onDelete: SetNull)
+  deliveries           NotificationDelivery[]
+  createdAt            DateTime                    @default(now())
+
+  @@index([createdAt])
+  @@index([targetUserId])
+  @@index([status, scheduledAt])
+  @@index([automationRuleId])
+}
+
+model NotificationAutomationRule {
+  id            String                        @id @default(cuid())
+  name          String
+  trigger       NotificationAutomationTrigger
+  source        NotificationSource
+  isActive      Boolean                       @default(true)
+  isSystem      Boolean                       @default(false)
+  audience      NotificationAudience          @default(USER)
+  segmentType   String?
+  segmentId     String?
+  titleTemplate String
+  bodyTemplate  String                        @db.Text
+  urlTemplate   String?
+  imageUrl      String?
+  scheduleTime  String?                       @db.VarChar(5)
+  timezone      String                        @default("Asia/Kolkata") @db.VarChar(64)
+  daysOfWeek    String?                       @db.VarChar(32)
+  mealTimeId    String?
+  lastRecipeId  String?
+  lastRunAt     DateTime?
+  nextRunAt     DateTime?
+  createdById   String?
+  createdByName String?
+  campaigns     NotificationCampaign[]
+  createdAt     DateTime                      @default(now())
+  updatedAt     DateTime                      @updatedAt
+
+  @@index([trigger, isActive])
+  @@index([trigger, isActive, nextRunAt])
+  @@index([mealTimeId])
+}
+
+model NotificationDelivery {
+  id             String                     @id @default(cuid())
+  campaignId     String
+  campaign       NotificationCampaign       @relation(fields: [campaignId], references: [id], onDelete: Cascade)
+  userId         String?
+  user           User?                      @relation(fields: [userId], references: [id], onDelete: SetNull)
+  subscriptionId String?
+  subscription   PushSubscription?          @relation(fields: [subscriptionId], references: [id], onDelete: SetNull)
+  status         NotificationDeliveryStatus @default(QUEUED)
+  deliveredAt    DateTime?
+  openedAt       DateTime?
+  clickedAt      DateTime?
+  failureReason  String?                    @db.Text
+  createdAt      DateTime                   @default(now())
+  updatedAt      DateTime                   @updatedAt
+
+  @@unique([campaignId, subscriptionId])
+  @@index([campaignId, status])
+  @@index([userId, createdAt])
+}
+
+enum ContentPipelineScheduleStatus {
+  SCHEDULED
+  PROCESSING
+  COMPLETED
+  PARTIAL_FAILED
+  FAILED
+  CANCELLED
+  SKIPPED
+}
+
+enum ContentPipelineScheduleSource {
+  MANUAL
+  AUTOMATION
+}
+
+enum ContentPipelineRecipeSource {
+  LATEST_READY
+}
+
+model ContentPipelineAutomationRule {
+  id              String                         @id @default(cuid())
+  name            String
+  isActive        Boolean                        @default(true)
+  platforms       Json
+  timeSlots       Json
+  daysOfWeek      Json?
+  timezone        String                         @default("Asia/Kolkata")
+  recipeSource    ContentPipelineRecipeSource    @default(LATEST_READY)
+  lastScheduledAt DateTime?
+  createdById     String?
+  createdByName   String?
+  scheduledPosts  ContentPipelineScheduledPost[]
+  createdAt       DateTime                       @default(now())
+  updatedAt       DateTime                       @updatedAt
+
+  @@index([isActive, createdAt])
+}
+
+model ContentPipelineScheduledPost {
+  id               String                          @id @default(cuid())
+  recipeId         String?
+  recipeTitle      String                          @db.Text
+  recipeUrl        String                          @db.VarChar(700)
+  imageUrl         String?                         @db.VarChar(700)
+  videoUrl         String?                         @db.VarChar(700)
+  platforms        Json
+  contentJson      Json
+  status           ContentPipelineScheduleStatus   @default(SCHEDULED)
+  source           ContentPipelineScheduleSource   @default(MANUAL)
+  scheduledAt      DateTime
+  processedAt      DateTime?
+  lastError        String?                         @db.Text
+  attempts         Int                             @default(0)
+  createdById      String?
+  createdByName    String?
+  automationRuleId String?
+  automationRule   ContentPipelineAutomationRule?  @relation(fields: [automationRuleId], references: [id], onDelete: SetNull)
+  publishAttempts  ContentPipelinePublishAttempt[]
+  createdAt        DateTime                        @default(now())
+  updatedAt        DateTime                        @updatedAt
+
+  @@index([status, scheduledAt])
+  @@index([automationRuleId, scheduledAt])
+  @@index([recipeId, scheduledAt])
+}
+
+model ContentPipelinePublishAttempt {
+  id              String                       @id @default(cuid())
+  scheduledPostId String
+  scheduledPost   ContentPipelineScheduledPost @relation(fields: [scheduledPostId], references: [id], onDelete: Cascade)
+  platform        String                       @db.VarChar(64)
+  status          String                       @db.VarChar(64)
+  message         String                       @db.Text
+  externalId      String?
+  externalUrl     String?                      @db.VarChar(700)
+  reactionCount   Int?
+  commentCount    Int?
+  shareCount      Int?
+  viewCount       Int?
+  metricsSyncedAt DateTime?
+  createdAt       DateTime                     @default(now())
+
+  @@index([scheduledPostId])
+  @@index([platform, status])
+}
+
+model ContentPipelineSocialCredential {
+  id                     String    @id @default(cuid())
+  provider               String    @unique @db.VarChar(64)
+  environment            String    @db.VarChar(32)
+  boardId                String?
+  accessTokenCiphertext  String?   @db.Text
+  refreshTokenCiphertext String?   @db.Text
+  tokenType              String?   @db.VarChar(64)
+  scope                  String?   @db.VarChar(700)
+  accessTokenExpiresAt   DateTime?
+  refreshTokenExpiresAt  DateTime?
+  connectedAccountId     String?
+  connectedAccountName   String?
+  connectedById          String?
+  connectedByName        String?
+  createdAt              DateTime  @default(now())
+  updatedAt              DateTime  @updatedAt
+
+  @@index([provider, environment])
+}
+
+model UserPlan {
+  id        String    @id @default(uuid())
+  userId    String
+  user      User      @relation(fields: [userId], references: [id])
+  planId    String
+  plan      Plan      @relation(fields: [planId], references: [id])
+  startDate DateTime
+  endDate   DateTime?
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+
+  @@unique([userId, planId])
+  @@index([userId])
+  @@index([planId])
+}
+
+model Account {
+  id                String  @id @default(cuid())
+  userId            String
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String? @db.Text
+  access_token      String? @db.Text
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String? @db.Text
+  session_state     String?
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+}
+
+model VerificationToken {
+  id      String   @id @default(cuid())
+  email   String
+  token   String   @unique
+  expires DateTime
+
+  @@unique([email, token])
+}
+
+model PasswordResetToken {
+  id      String   @id @default(cuid())
+  email   String
+  token   String   @unique
+  expires DateTime
+
+  @@unique([email, token])
+}
+
+model TwoFactorToken {
+  id      String   @id @default(cuid())
+  email   String
+  token   String   @unique
+  expires DateTime
+
+  @@unique([email, token])
+}
+
+model TwoFactorConfirmation {
+  id     String @id @default(cuid())
+  userId String
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId])
+}
+
+model Gender {
+  id       String  @id @default(uuid())
+  title    String
+  imageUrl String?
+  position Int?
+  User     User[]
+}
+
+model UserCuisines {
+  id        String   @id @default(uuid())
+  userId    String
+  cuisineId String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  cuisine   Cuisines @relation(fields: [cuisineId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, cuisineId])
+  @@index([cuisineId])
+  @@index([userId])
+}
+
+model UserAllrgies {
+  id        String    @id @default(uuid())
+  userId    String
+  allergyId String
+  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  allergy   Allergies @relation(fields: [allergyId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, allergyId])
+  @@index([allergyId])
+  @@index([userId])
+}
+
+model UserMealPlan {
+  id            String   @id @default(uuid())
+  userId        String
+  user          User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  planStartDate DateTime
+  planEndDate   DateTime
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+}
+
+model Post {
+  id              String         @id @default(uuid())
+  title           String
+  slug            String         @unique
+  metaTitle       String?        @db.Text
+  metaDescription String?        @db.Text
+  metaSlug        String?        @db.Text
+  content         String?        @db.Text
+  imageUrl        String?
+  isPublished     Boolean        @default(false)
+  authorId        String
+  author          User           @relation(fields: [authorId], references: [id])
+  PostCategory    PostCategory[]
+  PostTag         PostTag[]
+  articleComments Comment[]
+  createdAt       DateTime       @default(now())
+  updatedAt       DateTime       @updatedAt
+}
+
+model Category {
+  id           String         @id @default(uuid())
+  title        String         @unique
+  slug         String         @unique
+  imageUrl     String?
+  position     Int?
+  isPublished  Boolean        @default(false)
+  PostCategory PostCategory[]
+}
+
+model PostCategory {
+  id         String   @id @default(uuid())
+  postId     String
+  categoryId String
+  post       Post     @relation(fields: [postId], references: [id], onDelete: Cascade)
+  category   Category @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+
+  @@unique([postId, categoryId])
+}
+
+model ArticleTag {
+  id          String    @id @default(uuid())
+  title       String    @unique
+  slug        String    @unique
+  imageUrl    String?
+  position    Int?
+  isPublished Boolean   @default(false)
+  PostTag     PostTag[]
+}
+
+model PostTag {
+  id     String     @id @default(uuid())
+  postId String
+  tagId  String
+  post   Post       @relation(fields: [postId], references: [id], onDelete: Cascade)
+  tag    ArticleTag @relation(fields: [tagId], references: [id], onDelete: Cascade)
+
+  @@unique([postId, tagId])
+}
+
+model ContactUsQueries {
+  id              String                 @id @default(cuid())
+  name            String
+  email           String
+  phoneNumber     String?
+  query           String?                @db.Text
+  status          ContactLeadStatus      @default(NEW)
+  lastContactedAt DateTime?
+  closedReason    String?                @db.Text
+  activities      ContactQueryActivity[]
+  createdAt       DateTime               @default(now())
+  updatedAt       DateTime               @updatedAt
+}
+
+enum ContactLeadStatus {
+  NEW
+  CONTACTED
+  INTERESTED
+  FOLLOW_UP
+  CONVERTED
+  NOT_INTERESTED
+  CLOSED
+}
+
+model ContactQueryActivity {
+  id             String             @id @default(cuid())
+  queryId        String
+  query          ContactUsQueries   @relation(fields: [queryId], references: [id], onDelete: Cascade)
+  previousStatus ContactLeadStatus?
+  status         ContactLeadStatus
+  contactMethod  String?
+  note           String             @db.Text
+  contactedAt    DateTime
+  createdById    String?
+  createdByName  String?
+  createdAt      DateTime           @default(now())
+
+  @@index([queryId, contactedAt])
+}
+
+model Comment {
+  id              String         @id @default(uuid())
+  userId          String?
+  user            User?          @relation(fields: [userId], references: [id])
+  content         String         @db.Text
+  likes           Int?           @default(0)
+  recipe          Recipes?       @relation(fields: [recipeId], references: [id], onDelete: Cascade)
+  recipeId        String?
+  Post            Post?          @relation(fields: [postId], references: [id], onDelete: Cascade)
+  postId          String?
+  parentComment   Comment?       @relation("Replies", fields: [parentCommentId], references: [id], onDelete: Cascade)
+  parentCommentId String?
+  replies         Comment[]      @relation("Replies")
+  isPrimary       Boolean        @default(true)
+  isPublished     Boolean        @default(false)
+  CommentLikes    CommentLikes[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model CommentLikes {
+  id        String   @id @default(uuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id])
+  comment   Comment  @relation(fields: [commentId], references: [id], onDelete: Cascade)
+  commentId String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([userId, commentId])
+}
+
+model Review {
+  id          String  @id @default(uuid())
+  rating      Int     @default(1)
+  comment     String
+  user        User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId      String
+  recipe      Recipes @relation(fields: [recipeId], references: [id], onDelete: Cascade)
+  recipeId    String
+  isPublished Boolean @default(false)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Favorite {
+  id       String  @id @default(uuid())
+  user     User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId   String
+  recipe   Recipes @relation(fields: [recipeId], references: [id], onDelete: Cascade)
+  recipeId String
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([userId, recipeId])
+}
+
+enum RecipeReactionType {
+  YUMMY
+  LOVE
+  WOW
+  MADE_IT
+  COMFORT
+}
+
+model RecipeReaction {
+  id       String             @id @default(uuid())
+  type     RecipeReactionType
+  user     User               @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId   String
+  recipe   Recipes            @relation(fields: [recipeId], references: [id], onDelete: Cascade)
+  recipeId String
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([userId, recipeId])
+  @@index([recipeId, type])
+}
+
+enum PaymentStatus {
+  Processing
+  Paid
+  Failed
+  Success
+  Cancelled
+}
+
+model Order {
+  id            String        @id @default(cuid())
+  orderId       String?       @unique
+  subTotal      Float?
+  taxTotal      Float?
+  coupon        String?
+  discount      Float?
+  totalAmount   Float?
+  currency      String?
+  user          User          @relation(fields: [userId], references: [id])
+  userId        String
+  paymentMethod String?
+  paymentStatus PaymentStatus @default(Processing)
+  items         Item[]
+
+  createdAt DateTime @default(now())
+  updateAt  DateTime @updatedAt
+}
+
+model Item {
+  id       String  @id @default(cuid())
+  orderId  String?
+  order    Order?  @relation(fields: [orderId], references: [id])
+  itemName String
+  quantity Int     @default(1)
+  priceInr Float?
+  priceUsd Float?
+  planId   String?
+  plan     Plan?   @relation(fields: [planId], references: [id])
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+enum DiscountType {
+  FIXED_PRODUCT
+  CART_PERCENTAGE
+}
+
+model Coupon {
+  id            String       @id @default(uuid())
+  code          String       @unique
+  description   String?
+  discountType  DiscountType @default(CART_PERCENTAGE)
+  discountValue Float?
+  expiryDate    DateTime?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  isActive  Boolean  @default(false)
+
+  PlanOnCoupon PlanOnCoupon[]
+  UserCoupon   UserCoupon[]
+
+  @@index([code])
+}
+
+model PlanOnCoupon {
+  id       String @id @default(uuid())
+  couponId String
+  planId   String
+  coupon   Coupon @relation(fields: [couponId], references: [id], onDelete: Cascade)
+  plan     Plan   @relation(fields: [planId], references: [id])
+
+  @@unique([couponId, planId])
+}
+
+model UserCoupon {
+  id        String   @id @default(uuid())
+  userId    String
+  couponId  String
+  user      User?    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  coupon    Coupon   @relation(fields: [couponId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
+}

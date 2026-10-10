@@ -1,0 +1,1 @@
+ALTER TABLE `MediaAsset` MODIFY `fileSize` BIGINT NOT NULL;
