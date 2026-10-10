@@ -11,6 +11,7 @@ import { UserCountryProvider } from "@/context/user-country-context";
 import InstallPrompt from "@/components/install-prompt";
 import { ThemeProvider } from "@/components/theme-provider";
 import { buildSeoMetadata, DEFAULT_OG_IMAGE, SITE_NAME } from "@/lib/seo";
+import { GlobalCookingLoader } from "@/components/global-cooking-loader";
 
 const poppins = Poppins({
   subsets: ["latin"],
@@ -129,6 +130,7 @@ export default function RootLayout({
               speed={200}
               shadow="0 0 10px var(--primary), 0 0 5px var(--primary)"
             />
+            <GlobalCookingLoader />
             <UserCountryProvider>
               <CartProvider>{children}</CartProvider>
             </UserCountryProvider>
