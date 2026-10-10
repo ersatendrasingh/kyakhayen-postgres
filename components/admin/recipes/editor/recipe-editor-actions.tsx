@@ -24,16 +24,19 @@ export function RecipeEditorActions({
   recipeId,
   title,
   isPublished,
+  isSeoReady,
   canPublish,
 }: {
   recipeId: string;
   title: string;
   isPublished: boolean;
+  isSeoReady: boolean;
   canPublish: boolean;
 }) {
   const router = useRouter();
   const [publishing, setPublishing] = useState(false);
   const [deleting, setDeleting] = useState(false);
+  const [seoUpdating, setSeoUpdating] = useState(false);
 
   const updatePublished = async (checked: boolean) => {
     if (checked && !canPublish) {
@@ -55,6 +58,28 @@ export function RecipeEditorActions({
       toast.error(error instanceof Error ? error.message : "Unable to update recipe.");
     } finally {
       setPublishing(false);
+    }
+  };
+
+  const updateSeoReady = async (checked: boolean) => {
+    if (checked && !isPublished) {
+      toast.warning("Publish the recipe before marking it SEO ready.");
+      return;
+    }
+    try {
+      setSeoUpdating(true);
+      const response = await fetch(`/api/recipes/${recipeId}`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ isSeoReady: checked }),
+      });
+      if (!response.ok) throw new Error((await response.text()) || "Unable to update SEO status.");
+      toast.success(checked ? "Recipe added to sitemap" : "Recipe removed from sitemap");
+      router.refresh();
+    } catch (error) {
+      toast.error(error instanceof Error ? error.message : "Unable to update SEO status.");
+    } finally {
+      setSeoUpdating(false);
     }
   };
 
@@ -89,6 +114,16 @@ export function RecipeEditorActions({
           aria-label="Toggle published status"
         />
         {isPublished ? "Published" : "Draft"}
+      </div>
+      <div className="admin-taxonomy-hero-action flex h-10 items-center gap-3 rounded-xl border px-3 text-sm">
+        <Switch
+          checked={isSeoReady}
+          disabled={seoUpdating || !isPublished}
+          onCheckedChange={(checked) => void updateSeoReady(checked)}
+          className="cursor-pointer"
+          aria-label="Toggle SEO ready status"
+        />
+        {isSeoReady ? "SEO ready" : "SEO held"}
       </div>
       <AlertDialog>
         <AlertDialogTrigger asChild>

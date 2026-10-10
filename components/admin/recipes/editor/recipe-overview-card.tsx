@@ -12,6 +12,13 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 
+function toDateTimeLocal(value: string | null) {
+  if (!value) return "";
+  const date = new Date(value);
+  const offset = date.getTimezoneOffset();
+  return new Date(date.getTime() - offset * 60_000).toISOString().slice(0, 16);
+}
+
 export function RecipeOverviewCard({ recipe }: { recipe: RecipeEditorRecord }) {
   const router = useRouter();
   const [title, setTitle] = useState(recipe.title);
@@ -19,6 +26,8 @@ export function RecipeOverviewCard({ recipe }: { recipe: RecipeEditorRecord }) {
   const [prepTime, setPrepTime] = useState(String(recipe.recipeCookingTime?.prepTime ?? 0));
   const [cookTime, setCookTime] = useState(String(recipe.recipeCookingTime?.cookTime ?? 0));
   const [restTime, setRestTime] = useState(String(recipe.recipeCookingTime?.restTime ?? 0));
+  const [createdAt, setCreatedAt] = useState(toDateTimeLocal(recipe.createdAt));
+  const [publishedAt, setPublishedAt] = useState(toDateTimeLocal(recipe.publishedAt));
   const [saving, setSaving] = useState(false);
 
   const saveOverview = async (event: FormEvent<HTMLFormElement>) => {
@@ -35,6 +44,8 @@ export function RecipeOverviewCard({ recipe }: { recipe: RecipeEditorRecord }) {
         body: JSON.stringify({
           title: title.trim(),
           description: description.trim() || null,
+          createdAt: createdAt ? new Date(createdAt).toISOString() : undefined,
+          publishedAt: publishedAt ? new Date(publishedAt).toISOString() : null,
         }),
       });
       if (!detailsResponse.ok) throw new Error("Unable to save recipe details.");
@@ -113,6 +124,23 @@ export function RecipeOverviewCard({ recipe }: { recipe: RecipeEditorRecord }) {
                 </div>
               ))}
             </div>
+          </div>
+          <div className="rounded-2xl border bg-muted/15 p-4">
+            <div className="mb-4 flex items-center gap-2 text-sm font-medium">
+              <NotebookPen className="size-4 text-primary" />
+              Publishing dates
+            </div>
+            <div className="grid gap-3 sm:grid-cols-2">
+              <div className="space-y-2">
+                <Label htmlFor="recipe-created-at">Created date</Label>
+                <Input id="recipe-created-at" type="datetime-local" value={createdAt} onChange={(event) => setCreatedAt(event.target.value)} className="h-11 rounded-xl" />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="recipe-published-at">Published date</Label>
+                <Input id="recipe-published-at" type="datetime-local" value={publishedAt} onChange={(event) => setPublishedAt(event.target.value)} className="h-11 rounded-xl" />
+              </div>
+            </div>
+            <p className="mt-3 text-xs text-muted-foreground">These dates control the recipe timeline and sitemap last-modified date.</p>
           </div>
           <div className="flex justify-end">
             <Button disabled={saving} type="submit" className="h-11 min-w-44 rounded-xl">

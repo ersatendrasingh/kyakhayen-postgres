@@ -7,6 +7,7 @@ export type RecipeListRecord = {
   imageUrl: string | null;
   description: string | null;
   isPublished: boolean;
+  isSeoReady: boolean;
   updatedAt: string;
   category: {
     id: string;

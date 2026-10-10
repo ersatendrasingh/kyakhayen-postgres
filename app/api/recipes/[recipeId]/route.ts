@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { revalidatePath } from "next/cache";
+import { revalidatePath, revalidateTag } from "next/cache";
 import { RecipeSeasonality } from "@prisma/client";
 
 import { db } from "@/lib/db";
@@ -59,6 +59,9 @@ export async function PATCH(req: Request, props: { params: Promise<{ recipeId: s
       recipeDifficultyId: requestedRecipeDifficultyId,
       seasonIds: requestedSeasonIds,
       seasonality: requestedSeasonality,
+      isSeoReady: requestedIsSeoReady,
+      createdAt: requestedCreatedAt,
+      publishedAt: requestedPublishedAt,
       ...values
     } = payload;
     const title = requestedTitle ? normalizeRecipeTitle(requestedTitle) : undefined;
@@ -89,6 +92,23 @@ export async function PATCH(req: Request, props: { params: Promise<{ recipeId: s
     const data = Object.fromEntries(
       Object.entries(values).filter(([field]) => scalarFields.includes(field)),
     );
+    if (Object.prototype.hasOwnProperty.call(payload, "isSeoReady")) {
+      if (typeof requestedIsSeoReady !== "boolean") {
+        return NextResponse.json("Invalid SEO ready value", { status: 400 });
+      }
+      data.isSeoReady = requestedIsSeoReady;
+    }
+    for (const [field, value] of [["createdAt", requestedCreatedAt], ["publishedAt", requestedPublishedAt]] as const) {
+      if (value === undefined) continue;
+      if (value === null && field === "publishedAt") {
+        data[field] = null;
+        continue;
+      }
+      if (typeof value !== "string" || Number.isNaN(new Date(value).getTime())) {
+        return NextResponse.json(`Invalid ${field} value`, { status: 400 });
+      }
+      data[field] = new Date(value);
+    }
     if (Object.prototype.hasOwnProperty.call(values, "metaSlug")) {
       data.metaSlug =
         typeof values.metaSlug === "string"
@@ -213,8 +233,9 @@ export async function PATCH(req: Request, props: { params: Promise<{ recipeId: s
 
       return updatedRecipe;
     });
-    if (recipe.isPublished) {
+    if (recipe.isPublished || Object.prototype.hasOwnProperty.call(payload, "isSeoReady")) {
       revalidatePath("/sitemap.xml");
+      revalidateTag("recipes", "max");
     }
     return NextResponse.json(recipe, { status: 200 });
   } catch (error) {

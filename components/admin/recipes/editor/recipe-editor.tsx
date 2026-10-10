@@ -49,6 +49,9 @@ export function RecipeEditor({
               <Badge variant={recipe.isPublished ? "default" : "secondary"}>
                 {recipe.isPublished ? "Published" : "Draft"}
               </Badge>
+              <Badge variant={recipe.isSeoReady ? "default" : "outline"}>
+                {recipe.isSeoReady ? "SEO ready" : "SEO held"}
+              </Badge>
               {[
                 { label: `${recipe.ingredients.length} ingredients`, icon: Layers3 },
                 { label: `${recipe.steps.length} steps`, icon: ListChecks },
@@ -66,6 +69,7 @@ export function RecipeEditor({
             recipeId={recipe.id}
             title={recipe.title}
             isPublished={recipe.isPublished}
+            isSeoReady={recipe.isSeoReady}
             canPublish={canPublish}
           />
         </div>

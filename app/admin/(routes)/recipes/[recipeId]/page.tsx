@@ -97,6 +97,7 @@ const RecipeIdPage = async (props: { params: Promise<{ recipeId: string }> }) =>
         recipeSeasonsId: recipe.recipeSeasonsId,
         seasonality: recipe.seasonality,
         isPublished: recipe.isPublished,
+        isSeoReady: recipe.isSeoReady,
         metaTitle: recipe.metaTitle,
         metaDescription: recipe.metaDescription,
         metaSlug: recipe.metaSlug,

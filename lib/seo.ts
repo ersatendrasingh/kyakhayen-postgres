@@ -174,6 +174,20 @@ export function noIndexRobots(): Metadata["robots"] {
   };
 }
 
+export function noIndexNoFollowRobots(): Metadata["robots"] {
+  return {
+    index: false,
+    follow: false,
+    googleBot: {
+      index: false,
+      follow: false,
+      "max-video-preview": -1,
+      "max-image-preview": "large",
+      "max-snippet": -1,
+    },
+  };
+}
+
 export function buildSeoMetadata({
   title,
   description,

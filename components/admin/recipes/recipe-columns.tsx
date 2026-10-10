@@ -61,7 +61,9 @@ function auditTone(recipe: RecipeListRecord) {
 export function getRecipeColumns(
   onPublish: (recipe: RecipeListRecord, published: boolean) => void,
   onDelete: (recipe: RecipeListRecord) => void,
-  publishingId: string | null
+  onSeoReady: (recipe: RecipeListRecord, ready: boolean) => void,
+  publishingId: string | null,
+  seoUpdatingId: string | null,
 ): ColumnDef<RecipeListRecord>[] {
   return [
     {
@@ -189,6 +191,24 @@ export function getRecipeColumns(
           />
           <Badge variant={row.original.isPublished ? "secondary" : "outline"}>
             {row.original.isPublished ? "Live" : "Draft"}
+          </Badge>
+        </div>
+      ),
+    },
+    {
+      accessorKey: "isSeoReady",
+      header: "SEO",
+      cell: ({ row }) => (
+        <div className="flex min-w-[115px] items-center gap-2">
+          <Switch
+            aria-label={`${row.original.isSeoReady ? "Remove from" : "Add to"} sitemap ${row.original.title}`}
+            checked={row.original.isSeoReady}
+            disabled={!row.original.isPublished || seoUpdatingId === row.original.id}
+            onCheckedChange={(checked) => onSeoReady(row.original, checked)}
+            className="cursor-pointer"
+          />
+          <Badge variant={row.original.isSeoReady ? "secondary" : "outline"}>
+            {row.original.isSeoReady ? "Indexed" : "Held"}
           </Badge>
         </div>
       ),

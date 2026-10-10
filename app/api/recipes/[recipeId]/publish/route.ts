@@ -2,7 +2,7 @@ import { currentUser } from "@/lib/auth";
 import { db } from "@/lib/db";
 import { runRecipePublishedAutomations } from "@/lib/notification-automations";
 import { RecipeSeasonality } from "@prisma/client";
-import { revalidatePath } from "next/cache";
+import { revalidatePath, revalidateTag } from "next/cache";
 import { NextResponse } from "next/server";
 
 export async function PATCH(req: Request, props: { params: Promise<{ recipeId: string }> }) {
@@ -59,6 +59,7 @@ export async function PATCH(req: Request, props: { params: Promise<{ recipeId: s
       },
     });
     revalidatePath("/sitemap.xml");
+    revalidateTag("recipes", "max");
     if (!recipe.isPublished) {
       try {
         await runRecipePublishedAutomations(recipeId);

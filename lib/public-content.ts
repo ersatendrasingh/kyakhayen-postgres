@@ -317,7 +317,7 @@ async function findArticleMetadataByRouteSlug(routeSlug: string) {
 
 export const getPublicRecipeByRouteSlug = unstable_cache(
   findRecipeByRouteSlug,
-  ["public-recipe-by-route-slug-v2"],
+  ["public-recipe-by-route-slug-v3"],
   {
     revalidate: PUBLIC_CONTENT_REVALIDATE_SECONDS,
     tags: ["recipes", "public-content"],
@@ -326,7 +326,7 @@ export const getPublicRecipeByRouteSlug = unstable_cache(
 
 export const getPublicRecipeMetadataByRouteSlug = unstable_cache(
   findRecipeMetadataByRouteSlug,
-  ["public-recipe-metadata-by-route-slug-v2"],
+  ["public-recipe-metadata-by-route-slug-v3"],
   {
     revalidate: PUBLIC_CONTENT_REVALIDATE_SECONDS,
     tags: ["recipes", "public-content"],

@@ -365,6 +365,7 @@ const RecipesPage = async ({
         description: recipe.description,
         imageUrl: recipe.imageUrl,
         isPublished: recipe.isPublished,
+        isSeoReady: recipe.isSeoReady,
         updatedAt: recipe.updatedAt.toISOString(),
         category: recipe.RecipeCategories,
         difficulty: recipe.recipeDifficulty,

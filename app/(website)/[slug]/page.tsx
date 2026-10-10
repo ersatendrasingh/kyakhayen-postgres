@@ -2,7 +2,7 @@ import { notFound, permanentRedirect } from "next/navigation";
 import { Metadata } from "next";
 import SingleRecipe from "@/components/recipes/single-recipe";
 import SingleArticle from "@/components/blogs/single-article";
-import { articleHref, buildSeoMetadata, recipeHref, seoDescription, seoTitle } from "@/lib/seo";
+import { articleHref, buildSeoMetadata, noIndexNoFollowRobots, recipeHref, seoDescription, seoTitle } from "@/lib/seo";
 import { recipeAuthorProfile } from "@/lib/recipe-author-profile";
 import { recipeContentUpdatedAt, recipePublishedAt } from "@/lib/recipe-publication";
 import {
@@ -45,7 +45,7 @@ export async function generateMetadata(props: { params: Promise<{ slug: string }
       ...(recipe.recipeRecipeType ?? []).map(({ recipeType }) => recipeType.title),
     ].filter((value): value is string => Boolean(value));
 
-    return buildSeoMetadata({
+    const metadata = buildSeoMetadata({
       title: seoTitle(recipe.metaTitle, `${recipe.title} Recipe | Kya Khayen`),
       description,
       path: recipeHref(recipe),
@@ -57,6 +57,8 @@ export async function generateMetadata(props: { params: Promise<{ slug: string }
       keywords: recipeKeywords,
       authors: [{ name: recipeAuthorProfile.name, url: "/about-us" }],
     });
+    if (!recipe.isSeoReady) metadata.robots = noIndexNoFollowRobots();
+    return metadata;
   }
 
   const blog = await getPublicArticleMetadataByRouteSlug(slug);

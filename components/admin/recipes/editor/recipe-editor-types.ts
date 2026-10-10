@@ -38,6 +38,7 @@ export type RecipeEditorRecord = {
   recipeSeasonsId: string | null;
   seasonality: RecipeSeasonality;
   isPublished: boolean;
+  isSeoReady: boolean;
   metaTitle: string | null;
   metaDescription: string | null;
   metaSlug: string | null;

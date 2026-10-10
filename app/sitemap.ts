@@ -22,7 +22,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
   const [recipes, articles, recipeCollections] = await Promise.all([
     db.recipes.findMany({
-      where: publishedRecipeWhere(),
+      where: { ...publishedRecipeWhere(), isSeoReady: true },
       select: {
         slug: true,
         metaSlug: true,

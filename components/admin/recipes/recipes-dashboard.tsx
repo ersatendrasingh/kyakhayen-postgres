@@ -202,6 +202,7 @@ export function RecipesDashboard({
   const [deleteSelection, setDeleteSelection] = useState<DeleteSelection>(null);
   const [deleting, setDeleting] = useState(false);
   const [publishingId, setPublishingId] = useState<string | null>(null);
+  const [seoUpdatingId, setSeoUpdatingId] = useState<string | null>(null);
   const [jumpPage, setJumpPage] = useState(String(page));
   const [bulkTagOpen, setBulkTagOpen] = useState(false);
   const [bulkTagging, setBulkTagging] = useState(false);
@@ -264,10 +265,30 @@ export function RecipesDashboard({
     }
   };
 
+  const updateSeoReady = async (recipe: RecipeListRecord, checked: boolean) => {
+    try {
+      setSeoUpdatingId(recipe.id);
+      const response = await fetch(`/api/recipes/${recipe.id}`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ isSeoReady: checked }),
+      });
+      if (!response.ok) throw new Error((await response.text()) || "Unable to update SEO status.");
+      toast.success(checked ? `${recipe.title} added to sitemap` : `${recipe.title} removed from sitemap`);
+      router.refresh();
+    } catch (error) {
+      toast.error(error instanceof Error ? error.message : "Unable to update SEO status.");
+    } finally {
+      setSeoUpdatingId(null);
+    }
+  };
+
   const columns = getRecipeColumns(
     (recipe, checked) => void updatePublished(recipe, checked),
     (recipe) => setDeleteSelection({ type: "single", recipe }),
-    publishingId
+    (recipe, checked) => void updateSeoReady(recipe, checked),
+    publishingId,
+    seoUpdatingId
   );
 
   // TanStack Table owns mutable callbacks and cannot be safely compiler-memoized.
