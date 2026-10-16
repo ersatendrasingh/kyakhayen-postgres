@@ -17,6 +17,11 @@ type ChangeFrequency =
 
 export const revalidate = 3600;
 
+// This metadata route sits outside the website layout, so it does not inherit
+// that layout's dynamic rendering setting. Query it at request time instead of
+// connecting to Neon from a Vercel build worker.
+export const dynamic = "force-dynamic";
+
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const changeFrequency: ChangeFrequency = "daily";
 
