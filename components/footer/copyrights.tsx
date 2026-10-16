@@ -8,6 +8,15 @@ const Copyrights = () => {
       <Container>
         <p>
           &copy; {new Date().getFullYear()} Kya Khayen. All rights reserved.
+          {" · "}
+          <a
+            href="https://getkasa.in"
+            target="_blank"
+            rel="noreferrer"
+            className="transition-colors hover:text-white focus:outline-none focus-visible:text-white"
+          >
+            A Kasa Product
+          </a>
         </p>
       </Container>
     </div>
