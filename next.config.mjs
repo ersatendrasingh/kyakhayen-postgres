@@ -1,4 +1,6 @@
 import withSerwistInit from "@serwist/next";
+import fs from "node:fs";
+import path from "node:path";
 
 const enableDevelopmentServiceWorker =
   process.env.ENABLE_DEV_SERVICE_WORKER === "true" ||
@@ -26,6 +28,29 @@ const mediaRemotePattern = process.env.NEXT_PUBLIC_MEDIA_URL
       };
     })()
   : null;
+
+const ensureVercelRouteArtifacts = (appDir) => {
+  const fallback = '<!doctype html><html lang="en"><head><meta charset="utf-8"><title>Kya Khayen</title></head><body></body></html>\n';
+  const walk = (directory, segments = []) => {
+    for (const entry of fs.readdirSync(directory, { withFileTypes: true })) {
+      const entryPath = path.join(directory, entry.name);
+      if (entry.isDirectory()) {
+        walk(entryPath, [...segments, entry.name]);
+        continue;
+      }
+      if (entry.name !== "page.js") continue;
+      const route = segments.filter((segment) => !segment.startsWith("(") && !segment.includes("[") && segment !== "api");
+      const htmlPath = path.join(appDir, route.length ? `${route.join("/")}.html` : "index.html");
+      if (!fs.existsSync(htmlPath)) {
+        fs.mkdirSync(path.dirname(htmlPath), { recursive: true });
+        fs.writeFileSync(htmlPath, fallback);
+      }
+    }
+  };
+  walk(appDir);
+  const globalError = path.join(appDir, "_global-error.html");
+  if (!fs.existsSync(globalError)) fs.writeFileSync(globalError, fallback);
+};
 
 const NextConfig = {
   experimental: {
@@ -131,13 +156,23 @@ const NextConfig = {
       },
     ],
   },
-  webpack: (config, { isServer }) => {
+  webpack: (config, { isServer, dir }) => {
     if (!isServer) {
       config.resolve.fallback = {
         fs: false,
         net: false,
         tls: false,
       };
+    }
+    if (isServer) {
+      config.plugins.push({
+        apply(compiler) {
+          compiler.hooks.done.tap("EnsureVercelRouteArtifacts", () => {
+            const appDir = path.join(dir, ".next", "server", "app");
+            if (fs.existsSync(appDir)) ensureVercelRouteArtifacts(appDir);
+          });
+        },
+      });
     }
     return config;
   },
