@@ -38,6 +38,17 @@ const ensureVercelRouteArtifacts = (appDir) => {
         walk(entryPath, [...segments, entry.name]);
         continue;
       }
+      if (entry.name === "route.js") {
+        const route = segments.filter((segment) => !segment.startsWith("(") && !segment.includes("["));
+        if (route.length) {
+          const bodyPath = path.join(appDir, `${route.join("/")}.body`);
+          if (!fs.existsSync(bodyPath)) {
+            fs.mkdirSync(path.dirname(bodyPath), { recursive: true });
+            fs.writeFileSync(bodyPath, "");
+          }
+        }
+        continue;
+      }
       if (entry.name !== "page.js") continue;
       const route = segments.filter((segment) => !segment.startsWith("(") && !segment.includes("[") && segment !== "api");
       const htmlPath = path.join(appDir, route.length ? `${route.join("/")}.html` : "index.html");
