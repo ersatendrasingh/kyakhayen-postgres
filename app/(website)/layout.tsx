@@ -7,6 +7,10 @@ import { ModeToggle } from "@/components/mode-toggle";
 // Keep public DB-backed requests close to the primary Indian audience and
 // much closer to the Neon Singapore region than Vercel's default US region.
 export const preferredRegion = "bom1";
+// Vercel's current build pipeline fails while prerendering this application's
+// generated metadata routes. Keep rendering on demand; public data access is
+// still protected by the caches in lib/public-content and shared components.
+export const dynamic = "force-dynamic";
 
 const WebsiteLayout = ({ children }: { children: React.ReactNode }) => {
   return (
