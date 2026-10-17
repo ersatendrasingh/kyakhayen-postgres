@@ -56,6 +56,8 @@ const ensureVercelRouteArtifacts = (appDir) => {
         fs.mkdirSync(path.dirname(htmlPath), { recursive: true });
         fs.writeFileSync(htmlPath, fallback);
       }
+      const rscPath = path.join(appDir, route.length ? `${route.join("/")}.rsc` : "index.rsc");
+      if (!fs.existsSync(rscPath)) fs.writeFileSync(rscPath, "");
     }
   };
   walk(appDir);
