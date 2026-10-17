@@ -21,9 +21,10 @@ async function addStaticRouteFallbacks(directory, relativeSegments = []) {
     const routeSegments = relativeSegments.filter(
       (segment) => !segment.startsWith("(") && !segment.includes("[") && segment !== "api",
     );
-    if (routeSegments.length === 0) continue;
-
-    const htmlPath = path.join(appOutputDir, `${routeSegments.join("/")}.html`);
+    const htmlPath =
+      routeSegments.length === 0
+        ? path.join(appOutputDir, "index.html")
+        : path.join(appOutputDir, `${routeSegments.join("/")}.html`);
     try {
       await stat(htmlPath);
     } catch {
