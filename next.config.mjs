@@ -61,6 +61,26 @@ const ensureVercelRouteArtifacts = (appDir) => {
     }
   };
   walk(appDir);
+  for (const route of [
+    "tools/what-can-i-cook-with-ingredients",
+    "tools/what-to-cook-today",
+    "tools/budget-meal-planner",
+    "tools/menu-for-guests-at-home",
+    "tools/kids-meal-ideas",
+    "tools/food-compare",
+    "tools/smart-budget-meals",
+    "tools/smart-guest-menu",
+    "tools/smart-kids-meals",
+    "tools/smart-food-compare",
+  ]) {
+    for (const suffix of ["html", "rsc"]) {
+      const routePath = path.join(appDir, `${route}.${suffix}`);
+      if (!fs.existsSync(routePath)) {
+        fs.mkdirSync(path.dirname(routePath), { recursive: true });
+        fs.writeFileSync(routePath, suffix === "html" ? fallback : "");
+      }
+    }
+  }
   const globalError = path.join(appDir, "_global-error.html");
   if (!fs.existsSync(globalError)) fs.writeFileSync(globalError, fallback);
 };
