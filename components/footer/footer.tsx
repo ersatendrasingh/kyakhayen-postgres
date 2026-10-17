@@ -1,5 +1,6 @@
-import Link from "next/link";
+import NextLink from "next/link";
 import Image from "next/image";
+import type { ComponentProps } from "react";
 import { ArrowRight, Leaf, SunMedium } from "lucide-react";
 import { unstable_cache } from "next/cache";
 
@@ -10,6 +11,13 @@ import { toolPages } from "@/components/sections/situation-tools/tool-page-confi
 import { db } from "@/lib/db";
 import { getIngredientCollectionHubLinks } from "@/lib/ingredient-collection-hubs";
 import { recipeCollectionHref } from "@/lib/recipe-collection-url";
+
+// The footer appears on every public page and contains many content links.
+// Turning off viewport prefetching prevents one visit from issuing a burst of
+// database-backed route requests before the visitor chooses a destination.
+const Link = (props: ComponentProps<typeof NextLink>) => (
+  <NextLink {...props} prefetch={false} />
+);
 
 const getFooterNavigationData = unstable_cache(
   async () => {

@@ -28,6 +28,14 @@ const mediaRemotePattern = process.env.NEXT_PUBLIC_MEDIA_URL
   : null;
 
 const NextConfig = {
+  experimental: {
+    // Public pages use ISR. Generate them serially during a deployment so a
+    // build cannot stampede the Neon connection pool with concurrent Prisma
+    // queries. Runtime visitors are served from Next's cache.
+    staticGenerationMaxConcurrency: 1,
+    staticGenerationMinPagesPerWorker: 10_000,
+    staticGenerationRetryCount: 0,
+  },
   async redirects() {
     return [
       {
