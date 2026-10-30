@@ -5,16 +5,11 @@ import { db } from "@/lib/db";
 import { recipeCollectionHref } from "@/lib/recipe-collection-url";
 import { unstable_cache } from "next/cache";
 
-type DrinkRecipe = {
-  imageUrl: string | null;
-};
-
 type DrinkRecipeType = {
   title: string;
   slug: string;
   imageUrl: string | null;
   _count: { recipeRecipeType: number };
-  recipeRecipeType: { recipe: DrinkRecipe }[];
 };
 
 const drinkMenuConfig = [
@@ -105,15 +100,10 @@ function getCurrentSeason(date = new Date()): SeasonNavItem {
 function buildDrinkItems(drinkRecipeTypes: DrinkRecipeType[]): MenuLink[] {
   const typeBySlug = new Map(drinkRecipeTypes.map((type) => [type.slug, type]));
   const beverageType = typeBySlug.get("beveragesmoothie");
-  const firstDrinkImage =
-    beverageType?.imageUrl ||
-    beverageType?.recipeRecipeType.find((item) => item.recipe.imageUrl)?.recipe.imageUrl ||
-    null;
+  const firstDrinkImage = beverageType?.imageUrl || null;
   const countFor = (type?: DrinkRecipeType) => type?._count.recipeRecipeType ?? 0;
   const imageFor = (type?: DrinkRecipeType) =>
-    type?.imageUrl ||
-    type?.recipeRecipeType.find((item) => item.recipe.imageUrl)?.recipe.imageUrl ||
-    firstDrinkImage;
+    type?.imageUrl || firstDrinkImage;
 
   const focusedItems = drinkMenuConfig
     .map((item) => {
@@ -191,11 +181,6 @@ const getHeaderNavigationData = unstable_cache(
             title: true,
             slug: true,
             imageUrl: true,
-            recipeRecipeType: {
-              where: { recipe: { isPublished: true, imageUrl: { not: null } } },
-              select: { recipe: { select: { imageUrl: true } } },
-              take: 1,
-            },
           },
           orderBy: { position: "asc" },
           take: 8,
@@ -227,12 +212,6 @@ const getHeaderNavigationData = unstable_cache(
                 },
               },
             },
-            recipeRecipeType: {
-              where: { recipe: { isPublished: true, imageUrl: { not: null } } },
-              select: { recipe: { select: { imageUrl: true } } },
-              orderBy: { recipe: { contentUpdatedAt: "desc" } },
-              take: 1,
-            },
           },
           orderBy: { position: "asc" },
         }),
@@ -250,7 +229,7 @@ const getHeaderNavigationData = unstable_cache(
     const mappedRecipeTypes = recipeTypes.map((type) => ({
       title: type.title,
       slug: type.slug,
-      imageUrl: type.imageUrl || type.recipeRecipeType[0]?.recipe.imageUrl || null,
+      imageUrl: type.imageUrl || null,
     }));
     const drinkItems = buildDrinkItems(drinkRecipeTypes);
 
