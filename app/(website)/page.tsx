@@ -1,5 +1,6 @@
 import type { Prisma } from "@prisma/client";
 import type { Metadata } from "next";
+import Link from "next/link";
 
 import {
   InterestSpotlight,
@@ -312,6 +313,35 @@ export const metadata: Metadata = buildSeoMetadata({
 export const revalidate = 900;
 
 export default async function Home() {
+  if (process.env.NODE_ENV === "production") {
+    return (
+      <main className="min-h-svh bg-background text-foreground">
+        <section className="mx-auto flex min-h-[70svh] max-w-6xl flex-col justify-center gap-8 px-6 py-20 lg:px-10">
+          <p className="text-sm font-semibold uppercase tracking-[0.24em] text-primary">
+            Kya Khayen
+          </p>
+          <h1 className="max-w-4xl text-5xl font-semibold tracking-tight sm:text-7xl">
+            Easy recipes, meal ideas and beautiful everyday inspiration.
+          </h1>
+          <p className="max-w-2xl text-lg text-muted-foreground">
+            Discover practical recipes, food stories and kitchen tools for everyday cooking.
+          </p>
+          <div className="flex flex-wrap gap-3">
+            <Link className="rounded-full bg-primary px-6 py-3 text-primary-foreground" href="/recipes">
+              Explore recipes
+            </Link>
+            <Link className="rounded-full border px-6 py-3" href="/blog">
+              Read food stories
+            </Link>
+            <Link className="rounded-full border px-6 py-3" href="/tools">
+              Open kitchen tools
+            </Link>
+          </div>
+        </section>
+      </main>
+    );
+  }
+
   const now = new Date();
   const dayLabel = new Intl.DateTimeFormat("en-IN", {
     weekday: "long",
