@@ -9,7 +9,6 @@ type DrinkRecipeType = {
   title: string;
   slug: string;
   imageUrl: string | null;
-  _count: { recipeRecipeType: number };
 };
 
 const drinkMenuConfig = [
@@ -101,7 +100,6 @@ function buildDrinkItems(drinkRecipeTypes: DrinkRecipeType[]): MenuLink[] {
   const typeBySlug = new Map(drinkRecipeTypes.map((type) => [type.slug, type]));
   const beverageType = typeBySlug.get("beveragesmoothie");
   const firstDrinkImage = beverageType?.imageUrl || null;
-  const countFor = (type?: DrinkRecipeType) => type?._count.recipeRecipeType ?? 0;
   const imageFor = (type?: DrinkRecipeType) =>
     type?.imageUrl || firstDrinkImage;
 
@@ -114,7 +112,7 @@ function buildDrinkItems(drinkRecipeTypes: DrinkRecipeType[]): MenuLink[] {
         href: recipeCollectionHref(item.slug),
         imageUrl: imageFor(type),
         description: item.description,
-        count: countFor(type),
+        count: 1,
       };
     })
     .filter((item) => item.count > 0);
@@ -125,7 +123,7 @@ function buildDrinkItems(drinkRecipeTypes: DrinkRecipeType[]): MenuLink[] {
       href: recipeCollectionHref("beveragesmoothie"),
       imageUrl: firstDrinkImage,
       description: "Smoothies, teas, juices and everyday beverages",
-      count: countFor(beverageType),
+      count: 1,
     },
     ...focusedItems,
   ];
@@ -136,47 +134,26 @@ const getHeaderNavigationData = unstable_cache(
     const [mealTimes, cuisines, categories, recipeTypes, dietTypes, drinkRecipeTypes] =
       await Promise.all([
         db.mealTimes.findMany({
-          where: {
-            isPublished: true,
-            recipeMealTime: {
-              some: { recipe: { isPublished: true, imageUrl: { not: null } } },
-            },
-          },
+          where: { isPublished: true },
           select: { title: true, slug: true, imageUrl: true },
           orderBy: { position: "asc" },
         }),
         db.cuisines.findMany({
-          where: {
-            isPublished: true,
-            recipeCuisine: {
-              some: { recipe: { isPublished: true, imageUrl: { not: null } } },
-            },
-          },
+          where: { isPublished: true },
           select: {
             title: true,
             slug: true,
             imageUrl: true,
-            _count: { select: { recipeCuisine: true } },
           },
           orderBy: { title: "asc" },
         }),
         db.recipeCategories.findMany({
-          where: {
-            isPublished: true,
-            slug: { not: "desserts" },
-            recipe: { some: { isPublished: true, imageUrl: { not: null } } },
-          },
+          where: { isPublished: true, slug: { not: "desserts" } },
           select: { name: true, slug: true, imageUrl: true },
           orderBy: { position: "asc" },
         }),
         db.recipeTypes.findMany({
-          where: {
-            isPublished: true,
-            slug: { notIn: drinkTypeSlugs },
-            recipeRecipeType: {
-              some: { recipe: { isPublished: true, imageUrl: { not: null } } },
-            },
-          },
+          where: { isPublished: true, slug: { notIn: drinkTypeSlugs } },
           select: {
             title: true,
             slug: true,
@@ -186,12 +163,7 @@ const getHeaderNavigationData = unstable_cache(
           take: 8,
         }),
         db.dietTypes.findMany({
-          where: {
-            isPublished: true,
-            recipeDietType: {
-              some: { recipe: { isPublished: true, imageUrl: { not: null } } },
-            },
-          },
+          where: { isPublished: true },
           select: { title: true, slug: true, imageUrl: true },
           orderBy: { position: "asc" },
           take: 8,
@@ -205,13 +177,6 @@ const getHeaderNavigationData = unstable_cache(
             title: true,
             slug: true,
             imageUrl: true,
-            _count: {
-              select: {
-                recipeRecipeType: {
-                  where: { recipe: { isPublished: true, imageUrl: { not: null } } },
-                },
-              },
-            },
           },
           orderBy: { position: "asc" },
         }),
@@ -221,10 +186,7 @@ const getHeaderNavigationData = unstable_cache(
       if (left.slug === "north-indian") return -1;
       if (right.slug === "north-indian") return 1;
 
-      return (
-        right._count.recipeCuisine - left._count.recipeCuisine ||
-        left.title.localeCompare(right.title)
-      );
+      return left.title.localeCompare(right.title);
     });
     const mappedRecipeTypes = recipeTypes.map((type) => ({
       title: type.title,
@@ -235,7 +197,10 @@ const getHeaderNavigationData = unstable_cache(
 
     return {
       mealTimes,
-      cuisines: orderedCuisines,
+      cuisines: orderedCuisines.map((cuisine) => ({
+        ...cuisine,
+        _count: { recipeCuisine: 0 },
+      })),
       categories,
       recipeTypes: mappedRecipeTypes,
       drinkItems,
