@@ -63,7 +63,6 @@ const homepageCuisineSlugs = [
   "bengali",
   "italian",
 ] as const;
-const homepageCuisineRecipeTake = 72;
 
 const homeSituationRecipeSelect = {
   id: true,
@@ -415,61 +414,12 @@ export default async function Home() {
         where: {
           isPublished: true,
           slug: { in: [...homepageCuisineSlugs] },
-          recipeCuisine: {
-            some: { recipe: { ...publishedRecipeWhere(), imageUrl: { not: null } } },
-          },
         },
         select: {
           id: true,
           title: true,
           slug: true,
           imageUrl: true,
-          recipeCuisine: {
-            where: { recipe: { ...publishedRecipeWhere(), imageUrl: { not: null } } },
-            select: {
-              recipe: {
-                select: {
-                  id: true,
-                  title: true,
-                  slug: true,
-                  metaSlug: true,
-                  imageUrl: true,
-                  views: true,
-                  RecipeCategories: { select: { name: true, slug: true } },
-                  recipeCookingTime: {
-                    select: {
-                      prepTime: true,
-                      cookTime: true,
-                      restTime: true,
-                    },
-                  },
-                  recipeNutrient: {
-                    where: { nutrient: { isPublished: true } },
-                    select: { nutrient: { select: { title: true } } },
-                    take: 1,
-                  },
-                  recipeMealTime: {
-                    where: { mealTime: { isPublished: true } },
-                    select: {
-                      mealTime: { select: { title: true, slug: true } },
-                    },
-                  },
-                  recipeRecipeType: {
-                    where: { recipeType: { isPublished: true } },
-                    select: {
-                      recipeType: { select: { title: true, slug: true } },
-                    },
-                  },
-                },
-              },
-            },
-            orderBy: [
-              { recipe: { views: "desc" } },
-              { recipe: { contentUpdatedAt: "desc" } },
-              { recipe: { updatedAt: "desc" } },
-            ],
-            take: homepageCuisineRecipeTake,
-          },
         },
         orderBy: { position: "asc" },
       }),
@@ -652,11 +602,8 @@ export default async function Home() {
               id: cuisine.id,
               title: cuisine.title,
               slug: cuisine.slug,
-              imageUrl:
-                cuisine.imageUrl ||
-                cuisine.recipeCuisine[0]?.recipe.imageUrl ||
-                null,
-              recipes: cuisine.recipeCuisine.map(({ recipe }) => recipe),
+              imageUrl: cuisine.imageUrl || null,
+              recipes: [],
             }))}
           />
           <InterestSpotlight
