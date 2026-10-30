@@ -1,6 +1,5 @@
 import type { Prisma } from "@prisma/client";
 import type { Metadata } from "next";
-import Link from "next/link";
 
 import {
   InterestSpotlight,
@@ -64,6 +63,7 @@ const homepageCuisineSlugs = [
   "bengali",
   "italian",
 ] as const;
+const homepageCuisineRecipeTake = 72;
 
 const homeSituationRecipeSelect = {
   id: true,
@@ -313,35 +313,6 @@ export const metadata: Metadata = buildSeoMetadata({
 export const revalidate = 900;
 
 export default async function Home() {
-  if (process.env.NODE_ENV === "production") {
-    return (
-      <main className="min-h-svh bg-background text-foreground">
-        <section className="mx-auto flex min-h-[70svh] max-w-6xl flex-col justify-center gap-8 px-6 py-20 lg:px-10">
-          <p className="text-sm font-semibold uppercase tracking-[0.24em] text-primary">
-            Kya Khayen
-          </p>
-          <h1 className="max-w-4xl text-5xl font-semibold tracking-tight sm:text-7xl">
-            Easy recipes, meal ideas and beautiful everyday inspiration.
-          </h1>
-          <p className="max-w-2xl text-lg text-muted-foreground">
-            Discover practical recipes, food stories and kitchen tools for everyday cooking.
-          </p>
-          <div className="flex flex-wrap gap-3">
-            <Link className="rounded-full bg-primary px-6 py-3 text-primary-foreground" href="/recipes">
-              Explore recipes
-            </Link>
-            <Link className="rounded-full border px-6 py-3" href="/blog">
-              Read food stories
-            </Link>
-            <Link className="rounded-full border px-6 py-3" href="/tools">
-              Open kitchen tools
-            </Link>
-          </div>
-        </section>
-      </main>
-    );
-  }
-
   const now = new Date();
   const dayLabel = new Intl.DateTimeFormat("en-IN", {
     weekday: "long",
@@ -444,12 +415,61 @@ export default async function Home() {
         where: {
           isPublished: true,
           slug: { in: [...homepageCuisineSlugs] },
+          recipeCuisine: {
+            some: { recipe: { ...publishedRecipeWhere(), imageUrl: { not: null } } },
+          },
         },
         select: {
           id: true,
           title: true,
           slug: true,
           imageUrl: true,
+          recipeCuisine: {
+            where: { recipe: { ...publishedRecipeWhere(), imageUrl: { not: null } } },
+            select: {
+              recipe: {
+                select: {
+                  id: true,
+                  title: true,
+                  slug: true,
+                  metaSlug: true,
+                  imageUrl: true,
+                  views: true,
+                  RecipeCategories: { select: { name: true, slug: true } },
+                  recipeCookingTime: {
+                    select: {
+                      prepTime: true,
+                      cookTime: true,
+                      restTime: true,
+                    },
+                  },
+                  recipeNutrient: {
+                    where: { nutrient: { isPublished: true } },
+                    select: { nutrient: { select: { title: true } } },
+                    take: 1,
+                  },
+                  recipeMealTime: {
+                    where: { mealTime: { isPublished: true } },
+                    select: {
+                      mealTime: { select: { title: true, slug: true } },
+                    },
+                  },
+                  recipeRecipeType: {
+                    where: { recipeType: { isPublished: true } },
+                    select: {
+                      recipeType: { select: { title: true, slug: true } },
+                    },
+                  },
+                },
+              },
+            },
+            orderBy: [
+              { recipe: { views: "desc" } },
+              { recipe: { contentUpdatedAt: "desc" } },
+              { recipe: { updatedAt: "desc" } },
+            ],
+            take: homepageCuisineRecipeTake,
+          },
         },
         orderBy: { position: "asc" },
       }),
@@ -632,8 +652,11 @@ export default async function Home() {
               id: cuisine.id,
               title: cuisine.title,
               slug: cuisine.slug,
-              imageUrl: cuisine.imageUrl || null,
-              recipes: [],
+              imageUrl:
+                cuisine.imageUrl ||
+                cuisine.recipeCuisine[0]?.recipe.imageUrl ||
+                null,
+              recipes: cuisine.recipeCuisine.map(({ recipe }) => recipe),
             }))}
           />
           <InterestSpotlight
